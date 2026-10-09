@@ -2,45 +2,56 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Women's Fit Club</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>fit by tethkar</title>
+<meta name="theme-color" content="#0b0b10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="fit by tethkar">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Oswald:wght@400;500;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 <style>
 :root{--a:#ff4d8d;--b:#ff8a3d;--bg:#0b0b10;--card:#16161fcc;--line:#ffffff1f;--mut:#aab}
-*{box-sizing:border-box}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{margin:0;font-family:'Tajawal',sans-serif;color:#fff;background:var(--bg);min-height:100vh}
 body::before{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,#0b0b10b3,#0b0b10f5),url(https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1600&q=60) center/cover}
 h1,h2,h3{font-family:'Oswald','Tajawal',sans-serif;letter-spacing:.5px}
-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:16px 20px}
-.logo{font-size:24px;font-weight:700;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent;margin:0}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:calc(14px + env(safe-area-inset-top)) 18px 12px}
+.logo{font-size:26px;font-weight:700;margin:0;direction:ltr}
+.logo b{background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
+.logo i{font-style:normal;font-weight:400;font-size:.7em;color:#fff}
 .hb{display:flex;gap:8px;align-items:center;font-size:13px}
 .pill{background:#ffffff1f;border-radius:20px;padding:6px 14px}
 button{font-family:inherit;font-size:15px;cursor:pointer}
-.btn{background:linear-gradient(90deg,var(--a),var(--b));color:#fff;border:0;border-radius:12px;padding:11px 22px;font-weight:700;margin:4px 0}
+.btn{background:linear-gradient(90deg,var(--a),var(--b));color:#fff;border:0;border-radius:12px;padding:12px 22px;min-height:44px;font-weight:700;margin:4px 0}
 .btn.alt{background:#ffffff26}
-nav{display:flex;gap:8px;overflow-x:auto;padding:0 20px 12px;position:sticky;top:0;z-index:5;background:#0b0b10cc;backdrop-filter:blur(8px)}
-.tab,.chip{white-space:nowrap;background:#ffffff14;border:1px solid var(--line);color:#fff;border-radius:24px;padding:9px 18px}
+.btn:disabled{opacity:.6}
+nav{display:flex;gap:8px;overflow-x:auto;padding:0 18px 12px;position:sticky;top:0;z-index:5;background:#0b0b10dd;backdrop-filter:blur(8px)}
+.tab,.chip{white-space:nowrap;background:#ffffff14;border:1px solid var(--line);color:#fff;border-radius:24px;padding:10px 18px;min-height:42px}
 .on{background:linear-gradient(90deg,var(--a),var(--b));border-color:transparent}
-main{max-width:1000px;margin:auto;padding:12px 20px 60px}
+main{max-width:1000px;margin:auto;padding:12px 18px calc(60px + env(safe-area-inset-bottom))}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0;backdrop-filter:blur(8px)}
 label{font-size:13px;color:var(--mut)}
-input,select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#ffffff12;color:#fff;margin:4px 0 10px;font-family:inherit;font-size:15px}
+input,select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#ffffff12;color:#fff;margin:4px 0 10px;font-family:inherit;font-size:16px}
 select option{color:#000}
 .mut{color:var(--mut);font-size:14px}
 .chips{display:flex;gap:8px;overflow-x:auto;margin:12px 0}
-.tw{overflow-x:auto}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;min-width:480px}
 th,td{padding:11px 8px;border-bottom:1px solid var(--line);text-align:center;direction:ltr}
 th{color:var(--b);font-family:Oswald,sans-serif;font-weight:500}
 td:nth-child(2){text-align:left}
-.yt{background:#f03;color:#fff;border-radius:8px;padding:5px 12px;text-decoration:none;font-size:13px;white-space:nowrap}
+.mt{min-width:620px}.mt th,.mt td{direction:rtl;padding:6px 4px}
+.mt input{width:84px;margin:0;padding:8px;text-align:center}.mt input[type=date]{width:140px}
+.yt{background:#f03;color:#fff;border-radius:8px;padding:6px 12px;text-decoration:none;font-size:13px;white-space:nowrap;display:inline-block}
+.ev,.x{background:#ffffff26;border:0;border-radius:8px;color:#fff;padding:6px 10px}
 .big{font-family:Oswald,sans-serif;font-size:54px;text-align:center;background:linear-gradient(90deg,var(--a),var(--b));-webkit-background-clip:text;background-clip:text;color:transparent}
 .big small{font-size:18px}
 .g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:10px}
 .g3 div{background:#ffffff12;border-radius:12px;padding:12px;text-align:center}
 .g3 b{display:block;font-size:22px;font-family:Oswald,sans-serif}.g3 span{font-size:12px;color:var(--mut)}
-.meals{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px}
+.meals{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
 .meal{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden}
 .mi{height:190px;position:relative;display:flex;align-items:center;justify-content:center;font-size:64px;background:linear-gradient(135deg,#ff4d8d66,#ff8a3d66)}
 .mi img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -49,28 +60,29 @@ td:nth-child(2){text-align:left}
 .tags span{background:#ffffff14;border-radius:14px;padding:3px 10px;font-size:12px}
 .mb ul{padding-inline-start:18px;margin:8px 0;font-size:14px;line-height:1.8}
 details{font-size:14px;color:#dde}summary{cursor:pointer;color:var(--b);font-weight:700}
-.login{max-width:380px;margin:12vh auto}
+.login{max-width:380px;margin:10vh auto}
 .msg{color:#ff8a8a;min-height:20px;font-size:14px}
 .cred{white-space:pre-wrap;direction:ltr;text-align:left;background:#ffffff12;border-radius:10px;padding:10px;margin:8px 0;font-size:13px}
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:10px 0}
-.row button{padding:6px 12px;border-radius:8px;border:0;background:#ffffff26;color:#fff}
+.ctl{display:flex;gap:6px;align-items:center}.ctl input{width:80px;margin:0}
+.ctl button{padding:10px 12px;border-radius:8px;border:0;background:#ffffff26;color:#fff}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
-/* ===== الإعدادات: ضع رابط ومفتاح مشروع Supabase الجديد هنا ===== */
+/* ===== الإعدادات ===== */
 const SBU="https://frrytwvjnwbscoupzrmx.supabase.co";
 const SBK="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZycnl0d3Zqbndic2NvdXB6cm14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1NTA0NTEsImV4cCI6MjEwNzEyNjQ1MX0.ZTnVFEu1yfLwLU5NLgr818DzEBiu2sh5i4Yy3a9CWnA";
-const UD="fitclub.local"; /* نطاق وهمي لإيميلات المتدربات، لا يحتاج تغيير */
-const READY=!SBU.startsWith("PASTE")&&!SBK.startsWith("PASTE");
-const sb=READY?supabase.createClient(SBU,SBK):null;
-const sb2=READY?supabase.createClient(SBU,SBK,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}}):null;
+const UD="fitclub.local";   // نطاق داخلي لإيميلات المتدربات، لا تغيّريه بعد إنشاء حسابات
+const sb=supabase.createClient(SBU,SBK);
+const sb2=supabase.createClient(SBU,SBK,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-let S={coach:false,days:0,tab:"ex",day:0,list:[],cred:""};
+let S={coach:false,me:"",days:0,goal:"",tab:"ex",day:0,mf:"all",list:[],cred:"",vid:{},sel:"",rows:[]};
+const LOGO='<h1 class="logo"><b>fit</b> <i>by</i> <b>tethkar</b></h1>';
 
-/* ===== التمارين ===== */
+/* ===== التمارين: [الاسم, المجموعات × التكرار, الراحة] ===== */
 const DAYS=[
 ["Day 1 · Lower Body","🦵",[["Bodyweight Squat","3 × 15","45s"],["Glute Bridge","3 × 15","45s"],["Reverse Lunge","3 × 10 each","60s"],["Sumo Squat","3 × 12","45s"],["Calf Raise","3 × 20","30s"]]],
 ["Day 2 · Upper Body & Core","💪",[["Incline Push-Up","3 × 10","60s"],["Superman","3 × 12","45s"],["Plank","3 × 30-45s","45s"],["Dead Bug","3 × 10 each","45s"],["Bench Tricep Dips","3 × 10","60s"]]],
@@ -79,119 +91,249 @@ const DAYS=[
 ["Day 5 · Full Body","⚡",[["Squat to Press","3 × 12","60s"],["Bent Over Row","3 × 12","60s"],["Glute Bridge March","3 × 12","45s"],["Bear Plank Shoulder Tap","3 × 10 each","45s"],["Burpee (no jump)","3 × 8","60s"]]],
 ["Day 6-7 · Recovery","🧘",[["Brisk Walk","30-45 min","-"],["Cat Cow Stretch","2 × 10","-"],["Child's Pose","3 × 30s","-"],["Hamstring Stretch","2 × 30s each","-"],["Hip Flexor Stretch","2 × 30s each","-"]]]
 ];
+const DV={"Incline Push-Up":"https://www.youtube.com/watch?v=rYOl42BSJ6g"};   // روابط جاهزة؛ والباقي تضيفها المدربة من زر ✏️
 
-/* ===== الوجبات ===== */
-const MEALS=[
-{n:"بان كيك الموز والشوفان",t:"فطور",e:"🥞",img:"photo-1528207776546-365bb710ee93",k:520,p:23,c:78,f:14,
-i:["شوفان — 50 جم","موزة ناضجة متوسطة — 120 جم","بيضتان كبيرتان","حليب أو حليب لوز — 60 مل","بيكنج باودر — ½ ملعقة صغيرة","قرفة — ½ ملعقة صغيرة","توت أزرق — 60 جم","عسل — ملعقة صغيرة (7 جم)"],
-s:"اخلطي الشوفان والموز والبيض والحليب والبيكنج باودر والقرفة في الخلاط. اسكبي أقراصاً صغيرة على مقلاة غير لاصقة، دقيقتان لكل وجه، وزيّنيها بالتوت والعسل."},
-{n:"بول الدجاج المتوسطي",t:"غداء",e:"🥗",img:"photo-1546069901-ba9599a7e63c",k:580,p:48,c:38,f:24,
-i:["صدر دجاج نيء — 150 جم","كينوا مطبوخة — 120 جم","خيار — 80 جم","طماطم كرزية — 80 جم","زيتون كالاماتا — 20 جم","جبنة فيتا — 30 جم","حمص جاهز — 40 جم","زيت زيتون — ملعقة صغيرة","عصير ½ ليمونة وأوريجانو"],
-s:"تبّلي الدجاج بالأوريجانو والملح والفلفل واشويه 6-7 دقائق لكل وجه ثم قطّعيه شرائح. رتّبي الكينوا والخضار في صحن، وأضيفي الدجاج والحمص والفيتا، ورشّي الزيت والليمون."},
-{n:"سلمون بالليمون مع بطاطس وهليون",t:"عشاء",e:"🐟",img:"photo-1467003909585-2f8a72700288",k:530,p:40,c:40,f:24,
-i:["فيليه سلمون — 150 جم","بطاطس صغيرة — 200 جم","هليون — 120 جم","زيت زيتون — ملعقة صغيرة","ثوم — فصان","ليمون — ½ حبة","شبت أو بقدونس طازج"],
-s:"اخلطي البطاطس المقطعة بنصف الزيت والثوم وحمّريها في الفرن على 200° لمدة 15 دقيقة. أضيفي السلمون والهليون مدهونين بباقي الزيت والليمون وأعيديها 12 دقيقة، وزيّنيها بالشبت."},
-{n:"تاكو الروبيان بصلصة المانجو",t:"عشاء",e:"🌮",img:"photo-1565299585323-38d6b0865b47",k:480,p:35,c:50,f:16,
-i:["روبيان مقشر — 150 جم","تورتيلا ذرة صغيرة — 3 أقراص","مانجو مقطعة مكعبات — 80 جم","بصل أحمر — 20 جم","ملفوف أحمر مبشور — 40 جم","أفوكادو — 40 جم","كزبرة وعصير ½ ليمونة","بابريكا وكمون — ملعقة صغيرة","زيت زيتون — ملعقة صغيرة"],
-s:"تبّلي الروبيان بالبابريكا والكمون وسوّيه بالزيت دقيقتين لكل وجه. اخلطي المانجو والبصل والكزبرة والليمون لعمل الصلصة. دفّئي التورتيلا واحشيها بالملفوف والروبيان والصلصة والأفوكادو."},
-{n:"بارفيه الزبادي اليوناني والتوت",t:"سناك",e:"🍓",img:"photo-1488477181946-6428a0291777",k:350,p:24,c:42,f:9,
-i:["زبادي يوناني قليل الدسم — 200 جم","توت مشكل — 100 جم","جرانولا — 30 جم","عسل — ملعقة صغيرة","بذور الشيا — ملعقة صغيرة"],
-s:"رتّبي الزبادي والتوت والجرانولا طبقات في كوب، وزيّنيها بالعسل وبذور الشيا."},
-{n:"سموذي الشوكولاتة وزبدة الفول السوداني",t:"بعد التمرين",e:"🥤",img:"photo-1553530666-ba11a7da3888",k:400,p:38,c:34,f:13,
-i:["حليب قليل الدسم — 250 مل","نصف موزة مجمدة — 60 جم","بروتين باودر — سكوب (30 جم)","زبدة فول سوداني — ملعقة كبيرة (16 جم)","كاكاو غير محلى — ملعقة كبيرة (5 جم)","مكعبات ثلج"],
-s:"ضعي كل المكونات في الخلاط واخلطيها 40 ثانية حتى يصبح القوام كريمياً."}
-];
+/* ===== جدول القيم الغذائية لكل 100 جم: [الاسم, سعرات, بروتين, كربوهيدرات, دهون] ===== */
+const FD={
+ck:["صدر دجاج (نيء)",120,22.5,0,2.6],bf:["لحم بقري مفروم قليل الدهن (نيء)",137,21.4,0,5],st:["ستيك لحم بقري (نيء)",143,22,0,5.5],
+sa:["سلمون (نيء)",208,20,0,13],tu:["تونة معلّبة بالماء",116,26,0,.8],sh:["روبيان (نيء)",85,20,0,.5],fw:["فيليه سمك أبيض (نيء)",90,19,0,1.2],
+eg:["بيض",143,12.6,.7,9.5],ew:["بياض البيض",52,10.9,.7,.2],tf:["توفو",76,8,1.9,4.8],gy:["زبادي يوناني قليل الدسم",59,10,3.6,.4],
+cc:["جبنة قريش",72,12,2.7,1],fe:["جبنة فيتا",264,14,4,21],mz:["جبنة موزاريلا خفيفة",254,24,3,16],
+br:["أرز بني (مطبوخ)",123,2.7,26,1],qn:["كينوا (مطبوخة)",120,4.4,21,1.9],sp:["بطاطا حلوة (نيئة)",86,1.6,20,.1],po:["بطاطس (نيئة)",77,2,17,.1],
+oa:["شوفان",389,16.9,66,6.9],pa:["معكرونة قمح كامل (مطبوخة)",124,5.3,25,.5],wb:["خبز قمح كامل",247,13,41,3.4],tr:["تورتيلا قمح كامل",310,9,48,8],
+bu:["برغل (مطبوخ)",83,3.1,18.6,.2],le:["عدس (مطبوخ)",116,9,20,.4],cp:["حمّص حب (مطبوخ)",164,8.9,27,2.6],
+bc:["بروكلي",34,2.8,7,.4],sn:["سبانخ",23,2.9,3.6,.4],zu:["كوسا",17,1.2,3.1,.3],tm:["طماطم",18,.9,3.9,.2],cu:["خيار",15,.7,3.6,.1],
+bp:["فلفل ملوّن",26,1,6,.3],mu:["فطر",22,3.1,3.3,.3],cr:["جزر",41,.9,10,.2],as:["هليون",20,2.2,3.9,.1],lt:["خس وأوراق خضراء",17,1.4,3.3,.2],
+on:["بصل",40,1.1,9.3,.1],gb:["فاصوليا خضراء",31,1.8,7,.2],cf:["قرنبيط",25,1.9,5,.3],cb:["ملفوف",25,1.3,5.8,.1],
+ol:["زيت زيتون",884,0,0,100],av:["أفوكادو",160,2,9,15],al:["لوز",579,21,22,50],wn:["جوز",654,15,14,65],pb:["زبدة فول سوداني",588,25,20,50],
+ch:["بذور الشيا",486,17,42,31],hn:["عسل",304,.3,82,0],ov:["زيتون",115,.8,6,11],lj:["عصير ليمون",22,.4,6.9,.2],gl:["ثوم",149,6.4,33,.5],
+sy:["صلصة صويا قليلة الصوديوم",53,8,5,.1],bn:["موز",89,1.1,23,.3],ap:["تفاح",52,.3,14,.2],bw:["توت مشكّل",50,.7,12,.3],
+sw:["فراولة",32,.7,7.7,.3],mg:["مانجو",60,.8,15,.4],dt:["تمر",277,1.8,75,.2],mk:["حليب قليل الدسم",42,3.4,5,1],
+am:["حليب لوز غير محلّى",15,.6,.3,1.2],pr:["بروتين مصل اللبن (بودرة)",400,80,8,6],ca:["كاكاو غير محلّى",228,19.6,58,13.7],
+tp:["صلصة طماطم",32,1.6,7,.3],gr:["جرانولا",471,10,64,20],hu:["حمّص بالطحينة",166,8,14,10]};
+const PC={eg:[50,"بيضة"],bn:[120,"موزة"],ap:[180,"تفاحة"]};
+
+/* ===== الوجبات: الاسم | النوع | المكوّنات (رمز:جرام) | طريقة التحضير ===== */
+const TY={b:"فطور",l:"غداء",d:"عشاء",s:"سناك",p:"بعد التمرين"};
+const ST={
+B:"تبّلي {1} بالملح والفلفل والثوم، واطهيه على الشواية أو مقلاة ساخنة حتى ينضج تماماً ثم قطّعيه. جهّزي {2}، واغسلي الخضار وقطّعيها. رتّبي المكوّنات في وعاء، وأضيفي الصلصة أو زيت الزيتون مع عصير الليمون قبل التقديم.",
+O:"سخّني الفرن على 200°م. تبّلي {1} بالملح والفلفل والأعشاب، ورتّبيه في صينية مع بقية المكوّنات وقليل من الزيت. اخبزيه 20–25 دقيقة مع التقليب مرة واحدة حتى ينضج ويكتسب لوناً ذهبياً.",
+P:"سخّني مقلاة بقليل من الزيت وحمّري {1} على نار عالية 4–5 دقائق. أضيفي الخضار والتوابل وقلّبي 3–4 دقائق حتى تلين، وقدّميه ساخناً مع بقية المكوّنات.",
+W:"اطهي {1} وتبّليه جيداً. دفّئي الخبز أو التورتيلا، ثم احشيه بالمكوّنات مع الخضار الطازجة وأضيفي الصلصة، وقدّميه مباشرة.",
+S:"ضعي جميع المكوّنات في الخلاط مع قليل من مكعبات الثلج، واخلطيها 40 ثانية حتى يصبح القوام ناعماً وكريمياً. قدّميه فوراً.",
+A:"اخلطي {1} مع {2} وبقية المكوّنات في كوب أو وعاء. للحصول على أفضل نكهة اتركيه في الثلاجة ساعتين على الأقل أو طوال الليل، وقدّميه بارداً.",
+F:"اخفقي المكوّنات السائلة معاً ثم أضيفي الجافة وقلّبي حتى يتجانس الخليط. اسكبيه على مقلاة غير لاصقة بحرارة متوسطة، دقيقتان لكل وجه حتى يتحمّر، وزيّنيه بالفاكهة.",
+E:"اخفقي البيض مع الملح والفلفل. حمّري الخضار دقيقتين في مقلاة، ثم اسكبي البيض واطهيه على نار هادئة حتى يتماسك، وقدّميه مع بقية المكوّنات.",
+T:"حمّري البصل والثوم في قدر بقليل من الزيت، ثم أضيفي {1} والخضار والتوابل مع كوبين من الماء. اتركيها على نار هادئة 20–25 دقيقة حتى تنضج المكوّنات ويثخن القوام.",
+L:"قطّعي الخضار وضعيها في وعاء كبير، وأضيفي {1}. تبّلي بزيت الزيتون وعصير الليمون والملح والفلفل، وقلّبي جيداً قبل التقديم."};
+const EM={B:"🥗",O:"🍗",P:"🍳",W:"🌯",S:"🥤",A:"🍓",F:"🥞",E:"🍳",T:"🍲",L:"🥬"};
+const IM={B:"photo-1546069901-ba9599a7e63c",O:"photo-1467003909585-2f8a72700288",P:"photo-1512621776951-a57141f2eefd",W:"photo-1565299585323-38d6b0865b47",S:"photo-1553530666-ba11a7da3888",A:"photo-1488477181946-6428a0291777",F:"photo-1528207776546-365bb710ee93",E:"photo-1482049016688-2d3e1b311543",T:"photo-1547592180-85f173990554",L:"photo-1540189549336-e6e99c3679fe"};
+const MD=`بان كيك الشوفان والموز|b|oa:50 bn:120 eg:100 mk:60 bw:60 hn:7|F
+شوفان ليلي بزبدة الفول السوداني والتوت|b|oa:45 mk:150 gy:80 ch:8 pb:10 bw:70|A
+أومليت السبانخ والفيتا مع خبز القمح|b|eg:150 sn:60 fe:30 tm:50 ol:5 wb:40|E
+توست الأفوكادو والبيض|b|wb:70 av:60 eg:100 tm:50|E
+ساندويش الفطور بالبيض والجبن|b|wb:70 eg:100 mz:30 sn:30 tm:40|W
+بارفيه الزبادي اليوناني والجرانولا|b|gy:200 gr:30 bw:100 hn:7 ch:5|A
+شكشوكة الطماطم والفلفل|b|eg:150 tm:150 bp:80 on:40 ol:5 gl:5 wb:50|P
+فطائر الشوفان بالتفاح والجوز|b|oa:50 ew:100 ap:100 mk:80 wn:10|F
+توست التونة والأفوكادو|b|wb:70 tu:80 av:50 cu:60 lj:10|W
+سموذي بول الفراولة والشوفان|b|gy:150 sw:150 oa:30 bn:60 ch:5 am:100|S
+بول الدجاج المتوسطي|l|ck:150 qn:120 cu:80 tm:80 ov:20 fe:30 hu:40 ol:5 lj:15|B
+دجاج بالليمون والأعشاب مع الأرز البني|l|ck:150 br:150 bc:120 ol:5 lj:15 gl:5|P
+أرز الدجاج بالتيرياكي والخضار|l|ck:150 br:130 bp:80 bc:80 sy:15 hn:10 gl:5 ol:5|P
+معكرونة القمح الكامل باللحم وصلصة الطماطم|l|pa:180 bf:120 tp:100 mu:80 on:40 ol:5 mz:20|P
+سلطة التونة والحمّص|l|tu:120 cp:100 lt:80 cu:80 tm:80 on:30 ol:8 lj:20|L
+راب الدجاج والحمّص|l|tr:90 ck:130 hu:50 lt:40 cu:50 tm:50|W
+كفتة اللحم مع البرغل والخضار|l|bf:150 bu:150 zu:100 tm:100 on:50 ol:5 gl:5|P
+شوربة العدس بالدجاج|l|le:200 ck:100 cr:80 on:60 tm:100 ol:8 gl:5 lj:10|T
+بول البطاطا الحلوة والدجاج المشوي|l|ck:150 sp:200 bc:100 av:50 lj:10 ol:5|O
+بول الروبيان الآسيوي|l|sh:150 br:130 gb:100 cr:60 sy:15 gl:5 ol:6 lj:10|P
+سلطة الكينوا بالدجاج والأفوكادو|l|ck:140 qn:130 av:60 tm:80 cu:60 lj:20 ol:5 fe:20|L
+سمك مشوي مع البطاطس والسلطة|l|fw:180 po:200 lt:60 tm:80 ol:8 lj:20 gl:5|O
+فاهيتا الدجاج بالفلفل الملوّن|l|ck:150 bp:150 on:80 tr:60 av:40 ol:5 gy:30|W
+طاجن الدجاج والحمّص بالخضار|l|ck:150 cp:120 zu:100 cr:80 tm:100 on:50 ol:6|T
+سلمون بالليمون مع الهليون والبطاطس|d|sa:150 po:200 as:120 ol:5 lj:15 gl:5|O
+تاكو الروبيان بصلصة المانجو|d|sh:150 tr:90 mg:80 on:20 cb:40 av:40 lj:15|W
+ستيك اللحم مع الخضار المشوية|d|st:150 zu:120 bp:100 mu:80 po:150 ol:6|O
+كفتة الدجاج مع البرغل وسلطة الفيتا|d|ck:170 bu:100 on:30 cu:80 tm:80 fe:30 ol:6 lj:10 gl:5|O
+أومليت الفطر والموزاريلا|d|eg:150 mu:100 mz:30 sn:50 ol:5 wb:40|E
+سمك بصلصة الطماطم والكوسا مع الأرز|d|fw:180 zu:150 tm:120 on:40 ol:8 gl:5 br:100|P
+دجاج بالبابريكا مع القرنبيط والبطاطا الحلوة|d|ck:170 cf:200 sp:150 ol:6 lj:10|O
+شاورما الدجاج الصحية|d|ck:150 tr:70 gy:40 cu:60 tm:60 lt:30 gl:5 lj:10|W
+معكرونة الروبيان بالثوم والليمون|d|sh:150 pa:150 sn:60 tm:100 ol:8 gl:8 lj:15|P
+برجر اللحم الخفيف مع البطاطس|d|bf:140 wb:70 lt:30 tm:60 on:30 mz:20 po:150|P
+سلمون مع الكينوا والبروكلي|d|sa:140 qn:130 bc:120 ol:5 lj:15 hn:5|O
+شوربة الدجاج والخضار|d|ck:150 po:150 cr:80 zu:80 on:50 ol:5 gl:5|T
+فلفل محشي بالتونة والأرز|d|tu:130 br:120 bp:200 tm:80 on:30 mz:30 ol:5|O
+توفو بالخضار المقلية وصلصة الصويا|d|tf:200 eg:50 br:120 bc:100 cr:60 mu:60 sy:15 ol:8 hn:5|P
+زبادي يوناني بالعسل والجوز|s|gy:170 hn:7 wn:12 bw:60|A
+تفاح بزبدة الفول السوداني|s|ap:180 pb:20|A
+حمّص بالخضار المقرمشة|s|hu:80 cr:80 cu:80 bp:60|L
+كرات الطاقة بالتمر والشوفان|s|dt:30 oa:25 pb:12 ca:4 al:8|A
+جبنة قريش بالفراولة واللوز|s|cc:150 sw:100 al:12 hn:5|A
+بيض مسلوق مع الخيار والطماطم|s|eg:100 cu:100 tm:100 ol:3|L
+توست التونة المصغّر|s|wb:40 tu:70 cu:50 lj:5|W
+سموذي المانجو والزبادي|s|gy:150 mg:120 mk:100 ch:5|S
+شيك الشوكولاتة وزبدة الفول السوداني|p|mk:250 bn:60 pr:30 pb:16 ca:5|S
+سموذي التوت والبروتين|p|am:250 pr:30 bw:100 bn:60 oa:20|S
+وعاء الأرز والتونة السريع|p|tu:100 br:150 cu:60 lj:10 ol:3|B
+بان كيك البروتين بالموز|p|oa:30 pr:25 bn:100 eg:50 mk:50|F`;
+const nm=k=>FD[k][0],sh=k=>nm(k).replace(/\s*\(.*\)/,"");
+const MEALS=MD.split("\n").map(l=>{
+  const [n,t,i,m]=l.split("|"),it=i.split(" ").map(x=>{const [k,g]=x.split(":");return [k,+g]});
+  const v=it.reduce((a,[k,g])=>a.map((s,j)=>s+FD[k][j+1]*g/100),[0,0,0,0]);
+  return {n,t,m,it,k:Math.round(v[0]),p:Math.round(v[1]),c:Math.round(v[2]),f:Math.round(v[3])};
+});
 
 /* ===== الدخول وصلاحية الأيام ===== */
-async function init(){
-  if(!READY)return $("app").innerHTML='<div class="login card"><h2>الإعداد ناقص</h2><p class="mut">افتح الملف وضع رابط ومفتاح مشروع Supabase الجديد في أول السكربت (SBU و SBK).</p></div>';
-  const {data}=await sb.auth.getSession();data.session?enter(data.session.user):loginView()
-}
+async function init(){const {data}=await sb.auth.getSession();data.session?enter(data.session.user):loginView()}
 function loginView(m=""){
-  $("app").innerHTML=`<div class="login card"><h1 class="logo" style="font-size:34px;text-align:center">WOMEN'S FIT CLUB</h1>
-  <p class="mut" style="text-align:center">سجّلي دخولك بالحساب المؤقت الذي أرسلته لك المدربة</p>
+  $("app").innerHTML=`<div class="login card"><div style="text-align:center;font-size:30px">${LOGO}</div>
+  <p class="mut" style="text-align:center">أهلاً بكِ 👋<br>سجّلي دخولك بالحساب الذي أرسلته لكِ مدرّبتك</p>
   <input id="u" placeholder="اسم المستخدم" dir="ltr" autocapitalize="none" autocomplete="username">
   <input id="p" type="password" placeholder="كلمة المرور" onkeydown="if(event.key==='Enter')signIn()">
   <div class="msg">${m}</div><button class="btn" style="width:100%" onclick="signIn()">دخول</button></div>`;
 }
 async function signIn(){
   const n=$("u").value.trim().toLowerCase(),p=$("p").value;
-  const em=n.includes("@")?n:"fit."+n+"@"+UD;
-  const {data,error}=await sb.auth.signInWithPassword({email:em,password:p});
-  if(!error)return enter(data.user);
-  loginView("اسم المستخدم أو كلمة المرور غير صحيحة");
+  for(const em of n.includes("@")?[n]:["fit."+n+"@"+UD,n+"@"+UD]){
+    const {data,error}=await sb.auth.signInWithPassword({email:em,password:p});
+    if(!error)return enter(data.user);
+  }
+  loginView("بيانات الدخول غير صحيحة، تأكدي منها وحاولي مجدداً.");
 }
 async function enter(u){
+  S.me=u.id;
   const {data:pr}=await sb.from("profiles").select("role").eq("id",u.id).maybeSingle();
-  if(pr?.role==="owner"){S.coach=true;return render()}
-  const {data:t}=await sb.from("trainees").select("expires_at").eq("id",u.id).maybeSingle();
-  const d=t?Math.ceil((new Date(t.expires_at)-Date.now())/864e5):0;
-  if(d<=0){await sb.auth.signOut();return loginView(t?"انتهت صلاحية حسابك، تواصلي مع المدربة للتجديد":"حسابك غير مفعّل")}
-  S.days=d;render();
+  if(pr?.role==="owner")S.coach=true;
+  else{
+    const {data:t}=await sb.from("trainees").select("expires_at,goal").eq("id",u.id).maybeSingle();
+    const d=t?Math.ceil((new Date(t.expires_at)-Date.now())/864e5):0;
+    if(d<=0){await sb.auth.signOut();return loginView(t?"انتهت صلاحية اشتراكك، تواصلي مع مدرّبتك للتجديد.":"هذا الحساب غير مفعّل.")}
+    S.days=d;S.goal=t.goal||"";
+  }
+  const {data:v}=await sb.from("ex_videos").select("*");
+  (v||[]).forEach(x=>S.vid[x.name]=x.url);
+  render();
 }
 async function out(){await sb.auth.signOut();S.coach=false;S.tab="ex";loginView()}
 
 /* ===== الواجهة ===== */
-function setTab(k){S.tab=k;k==="co"?loadT():render()}
+function setTab(k){S.tab=k;k==="co"?loadT():k==="ms"?loadM():render()}
 function render(){
-  const T=[["ex","🏋️ التمارين المنزلية"],["cal","🔥 حاسبة السعرات"],["nu","🥗 التغذية"]];
+  const T=[["ex","🏋️ التمارين"],["cal","🔥 السعرات"],["nu","🥗 التغذية"],["ms",S.coach?"📏 القياسات":"📏 قياساتي"]];
   if(S.coach)T.push(["co","👩‍🤝‍👩 المتدربات"]);
-  const V={ex:exView,cal:calView,nu:nuView,co:coView}[S.tab]();
-  $("app").innerHTML=`<header><h1 class="logo">WOMEN'S FIT CLUB</h1><div class="hb">${S.coach?'<span class="pill">المدربة</span>':`<span class="pill">⏳ باقي ${S.days} يوم</span>`}<button class="btn alt" onclick="out()">خروج</button></div></header>
+  const V={ex:exView,cal:calView,nu:nuView,ms:mView,co:coView}[S.tab]();
+  $("app").innerHTML=`<header>${LOGO}<div class="hb">${S.coach?'<span class="pill">المدرّبة</span>':`<span class="pill">⏳ متبقي ${S.days} يوم</span>`}<button class="btn alt" style="margin:0" onclick="out()">خروج</button></div></header>
   <nav>${T.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" onclick="setTab('${t[0]}')">${t[1]}</button>`).join("")}</nav><main>${V}</main>`;
 }
 function exView(){
   const d=DAYS[S.day];
-  return `<h2>Home Workout Plan</h2>
-  <p class="mut">البرنامج مبني على توصيات ACSM ومنظمة الصحة العالمية: تمارين مقاومة يومين أسبوعياً على الأقل، و150 دقيقة نشاط متوسط، بمعدل 2-4 مجموعات و8-15 عدّة وراحة 30-90 ثانية. ابدئي بإحماء 5 دقائق واختمي بتمدد 5 دقائق.</p>
+  return `<h2>Home Workout</h2>
   <div class="chips">${DAYS.map((x,i)=>`<button class="chip ${i===S.day?"on":""}" onclick="S.day=${i};render()">${x[1]} ${x[0].split(" · ")[0]}</button>`).join("")}</div>
   <div class="card"><h3>${d[1]} ${d[0]}</h3><div class="tw"><table>
   <tr><th>#</th><th>Exercise</th><th>Sets × Reps</th><th>Rest</th><th>Video</th></tr>
-  ${d[2].map((r,i)=>`<tr><td>${i+1}</td><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td><a class="yt" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(r[0]+" proper form tutorial")}">▶️ Watch</a></td></tr>`).join("")}
+  ${d[2].map((r,i)=>{const u=S.vid[r[0]]||DV[r[0]];return `<tr><td>${i+1}</td><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td><a class="yt" target="_blank" rel="noopener" href="${u||"https://www.youtube.com/results?search_query="+encodeURIComponent(r[0]+" exercise tutorial")}">▶ Watch</a>${S.coach?` <button class="ev" onclick="editV(${i})">${u?"✏️":"⚠️"}</button>`:""}</td></tr>`}).join("")}
   </table></div></div>`;
+}
+async function editV(i){
+  const n=DAYS[S.day][2][i][0],u=prompt("الصقي رابط فيديو الشرح من يوتيوب للتمرين: "+n+"\n(اتركيه فارغاً لحذف الرابط)",S.vid[n]||DV[n]||"");
+  if(u===null)return;
+  const v=u.trim();
+  if(v&&!/^https?:\/\/(www\.|m\.)?(youtube\.com|youtu\.be)\//i.test(v))return alert("الرابط غير صحيح، يجب أن يكون رابطاً من يوتيوب");
+  const {error}=v?await sb.from("ex_videos").upsert({name:n,url:v}):await sb.from("ex_videos").delete().eq("name",n);
+  if(error)return alert(error.message);
+  v?S.vid[n]=v:delete S.vid[n];render();
 }
 function calView(){
   return `<h2>Calorie Calculator</h2><div class="card">
   <label>العمر (سنة)</label><input id="ca" type="number" inputmode="decimal">
-  <label>الوزن (كجم)</label><input id="cw" type="number" inputmode="decimal">
+  <label>الوزن (كغ)</label><input id="cw" type="number" inputmode="decimal">
   <label>الطول (سم)</label><input id="ch" type="number" inputmode="decimal">
-  <label>مستوى النشاط</label><select id="cf"><option value="1.2">خامل (بدون تمارين)</option><option value="1.375" selected>خفيف (تمارين 1-3 أيام أسبوعياً)</option><option value="1.55">متوسط (3-5 أيام)</option><option value="1.725">عالٍ (6-7 أيام)</option></select>
-  <label>الهدف</label><select id="cg"><option value="lose">إنقاص الوزن</option><option value="maintain">تثبيت الوزن</option><option value="gain">زيادة الوزن / بناء عضل</option></select>
-  <button class="btn" style="width:100%" onclick="calc()">احسبي</button></div>
-  <div class="card" id="res"><p class="mut">أدخلي بياناتك واضغطي «احسبي».</p></div>
-  <p class="mut">المعادلة: Mifflin-St Jeor للنساء (10×الوزن + 6.25×الطول − 5×العمر − 161) مضروبة بمعامل النشاط القياسي. الإنقاص بعجز 500 سعرة (≈0.5 كجم أسبوعياً) والزيادة بفائض 300 سعرة، والبروتين 1.8-2 جم/كجم وفق ISSN. النتائج تقديرية وليست بديلاً عن استشارة مختصة.</p>`;
+  <label>مستوى النشاط</label><select id="cf"><option value="1.2">قليل الحركة (بدون تمارين)</option><option value="1.375" selected>نشاط خفيف (1–3 أيام أسبوعياً)</option><option value="1.55">نشاط متوسط (3–5 أيام)</option><option value="1.725">نشاط مرتفع (6–7 أيام)</option></select>
+  <label>الهدف</label><select id="cg"><option value="lose">خسارة الوزن</option><option value="maintain">ثبات الوزن</option><option value="gain">زيادة الوزن وبناء العضلات</option></select>
+  <button class="btn" style="width:100%" onclick="calc()">احسبي احتياجك</button></div>
+  <div class="card" id="res"><p class="mut">أدخلي بياناتك ثم اضغطي «احسبي احتياجك».</p></div>`;
 }
 function calc(){
   const a=+$("ca").value,w=+$("cw").value,h=+$("ch").value,f=+$("cf").value,g=$("cg").value;
-  if(!(a>0&&w>0&&h>0))return alert("اكتبي العمر والوزن والطول");
+  if(!(a>0&&w>0&&h>0))return alert("يرجى إدخال العمر والوزن والطول");
   const bmr=10*w+6.25*h-5*a-161,tdee=bmr*f;
   const t=Math.max(1200,g==="lose"?tdee-500:g==="gain"?tdee+300:tdee);
   const pr=w*(g==="lose"?2:1.8),fat=t*.25/9,carb=Math.max(0,(t-pr*4-fat*9)/4),r=x=>Math.round(x/10)*10;
   $("res").innerHTML=`<div class="big">${r(t)}<small> kcal / day</small></div>
-  <p class="mut" style="text-align:center">سعراتك اليومية المناسبة لهدفك${t===1200?" (ضُبطت على الحد الأدنى الآمن)":""}</p>
-  <div class="g3"><div><b>${r(bmr)}</b><span>BMR الأساسي</span></div><div><b>${r(tdee)}</b><span>TDEE الكلي</span></div>
+  <p class="mut" style="text-align:center">احتياجك اليومي من السعرات لتحقيق هدفك${t===1200?" (تم ضبطه على الحد الأدنى الآمن)":""}</p>
+  <div class="g3"><div><b>${r(bmr)}</b><span>معدل الحرق الأساسي (BMR)</span></div><div><b>${r(tdee)}</b><span>إجمالي الحرق اليومي (TDEE)</span></div>
   <div><b>${Math.round(pr)}g</b><span>بروتين</span></div><div><b>${Math.round(carb)}g</b><span>كربوهيدرات</span></div><div><b>${Math.round(fat)}g</b><span>دهون</span></div></div>`;
 }
-function nuView(){
-  return `<h2>Healthy Meals</h2><p class="mut">وجبات متوازنة بنكهات ممتعة. المكونات للحصة الواحدة، والقيم الغذائية تقريبية (مرجعها USDA FoodData Central).</p>
-  <div class="meals">${MEALS.map(m=>`<div class="meal"><div class="mi"><span>${m.e}</span><img src="https://images.unsplash.com/${m.img}?auto=format&fit=crop&w=800&q=70" loading="lazy" alt="" onerror="this.remove()"></div>
-  <div class="mb"><div class="tags"><span>${m.t}</span></div><h3>${m.n}</h3>
+function mealCard(m){
+  const s=ST[m.m].replace("{1}",sh(m.it[0][0])).replace("{2}",m.it[1]?sh(m.it[1][0]):"");
+  return `<div class="meal"><div class="mi"><span>${EM[m.m]}</span><img src="https://images.unsplash.com/${IM[m.m]}?auto=format&fit=crop&w=800&q=70" loading="lazy" alt="" onerror="this.remove()"></div>
+  <div class="mb"><div class="tags"><span>${TY[m.t]}</span></div><h3>${m.n}</h3>
   <div class="tags"><span>🔥 ${m.k} kcal</span><span>P ${m.p}g</span><span>C ${m.c}g</span><span>F ${m.f}g</span></div>
-  <ul>${m.i.map(x=>`<li>${x}</li>`).join("")}</ul><details><summary>طريقة التحضير</summary><p>${m.s}</p></details></div></div>`).join("")}</div>`;
+  <ul>${m.it.map(([k,g])=>`<li>${nm(k)} — ${g} جم${PC[k]?` (${Math.round(g/PC[k][0]*2)/2} ${PC[k][1]})`:""}</li>`).join("")}</ul>
+  <details><summary>طريقة التحضير</summary><p>${s}</p></details></div></div>`;
+}
+function nuView(){
+  const L=MEALS.filter(m=>S.mf==="all"||m.t===S.mf);
+  return `<h2>Healthy Meals</h2><div class="chips">${[["all","الكل"],...Object.entries(TY)].map(([k,v])=>`<button class="chip ${S.mf===k?"on":""}" onclick="S.mf='${k}';render()">${v}</button>`).join("")}</div>
+  <div class="meals">${L.map(mealCard).join("")}</div>`;
 }
 
-/* ===== لوحة المدربة ===== */
+/* ===== القياسات ===== */
+const MC=["weight","waist","hips","chest","arm","thigh"],MH=["الوزن (كغ)","الخصر (سم)","الأرداف (سم)","الصدر (سم)","الذراع (سم)","الفخذ (سم)"];
+async function loadM(){
+  if(S.coach){
+    if(!S.list.length){const {data}=await sb.from("trainees").select("*").order("created_at",{ascending:false});S.list=data||[]}
+    if(!S.sel||!S.list.find(x=>x.id===S.sel))S.sel=S.list[0]?.id||"";
+  }else S.sel=S.me;
+  if(!S.sel){S.rows=[];return render()}
+  const {data}=await sb.from("measurements").select("*").eq("trainee_id",S.sel).order("d");
+  S.rows=data||[];render();
+}
+function mView(){
+  const c=S.coach,r=S.rows,t=S.list.find(x=>x.id===S.sel);
+  if(c&&!S.list.length)return `<h2>Measurements</h2><div class="card"><p class="mut">أضيفي متدربة أولاً من تبويب «المتدربات».</p></div>`;
+  const head=c?`<select onchange="S.sel=this.value;loadM()">${S.list.map(x=>`<option value="${x.id}" ${x.id===S.sel?"selected":""}>${esc(x.username)}</option>`).join("")}</select>
+  <label>هدف المتدربة</label><input value="${esc(t?.goal)}" placeholder="مثال: خسارة 6 كغ خلال 3 أشهر" onchange="saveGoal(this.value)">`
+  :`<p><b>🎯 هدفك:</b> ${esc(S.goal)||"ستحدّده مدرّبتك قريباً"}</p>`;
+  const f=r[0],l=r[r.length-1],dl=k=>{if(r.length<2||f[k]==null||l[k]==null)return "-";const d=Math.round((l[k]-f[k])*10)/10;return (d>0?"+":"")+d};
+  const sum=r.length>1?`<div class="g3">${[0,1,2].map(i=>`<div><b dir="ltr">${dl(MC[i])}</b><span>تغيّر ${MH[i].split(" (")[0]} منذ البداية</span></div>`).join("")}</div>`:"";
+  const cell=(x,k,v)=>c?`<input type="number" step="0.1" inputmode="decimal" value="${v??""}" onchange="upM('${x.id}','${k}',this.value)">`:(v??"-");
+  return `<h2>Measurements</h2><div class="card">${head}${sum}</div>
+  <div class="card"><div class="tw"><table class="mt"><tr><th>التاريخ</th>${MH.map(h=>`<th>${h}</th>`).join("")}${c?"<th></th>":""}</tr>
+  ${r.map(x=>`<tr><td>${c?`<input type="date" value="${x.d}" onchange="upM('${x.id}','d',this.value)">`:new Date(x.d).toLocaleDateString("ar")}</td>${MC.map(k=>`<td>${cell(x,k,x[k])}</td>`).join("")}${c?`<td><button class="x" onclick="delM('${x.id}')">✕</button></td>`:""}</tr>`).join("")||`<tr><td colspan="8" class="mut">لا توجد قياسات مسجّلة بعد</td></tr>`}
+  </table></div>${c?`<button class="btn" onclick="addM()">＋ إضافة قياس جديد</button>`:""}</div>`;
+}
+async function upM(id,k,v){
+  const val=v===""?null:k==="d"?v:+v,{error}=await sb.from("measurements").update({[k]:val}).eq("id",id);
+  if(error)return alert(error.message);
+  const x=S.rows.find(y=>y.id===id);if(x)x[k]=val;
+}
+async function addM(){
+  const l=S.rows[S.rows.length-1],base=l?Object.fromEntries(MC.map(k=>[k,l[k]])):{};
+  const {error}=await sb.from("measurements").insert({trainee_id:S.sel,...base});
+  if(error)return alert(error.message);loadM();
+}
+async function delM(id){if(!confirm("حذف هذا القياس؟"))return;await sb.from("measurements").delete().eq("id",id);loadM()}
+async function saveGoal(v){
+  const {error}=await sb.from("trainees").update({goal:v.trim()||null}).eq("id",S.sel);
+  if(error)return alert(error.message);
+  const t=S.list.find(x=>x.id===S.sel);if(t)t.goal=v.trim();
+}
+
+/* ===== لوحة المدرّبة ===== */
 const pw=()=>[...crypto.getRandomValues(new Uint8Array(8))].map(x=>"abcdefghjkmnpqrstuvwxyz23456789"[x%31]).join("");
 function coView(){
   return `<h2>إنشاء حساب متدربة</h2><div class="card">
   <label>اسم المستخدم (أحرف إنجليزية وأرقام)</label><input id="tu" dir="ltr" autocapitalize="none">
   <label>كلمة المرور</label><input id="tp" dir="ltr" value="${pw()}">
-  <label>مدة صلاحية الحساب (بالأيام)</label><input id="td" type="number" min="1" value="30">
+  <label>مدة الاشتراك (بالأيام)</label><input id="td" type="number" min="1" value="30">
   <button class="btn" id="tb" onclick="addT()">إنشاء الحساب</button>
   ${S.cred?`<div class="cred">${esc(S.cred)}</div><button class="btn alt" onclick="navigator.clipboard.writeText(S.cred);this.textContent='تم النسخ'">نسخ البيانات</button>`:""}</div>
   <h2>المتدربات</h2><div class="card">${S.list.map(x=>{const d=Math.ceil((new Date(x.expires_at)-Date.now())/864e5);
-  return `<div class="row"><div><b>${esc(x.username)}</b><br><span class="mut">${d>0?"باقي "+d+" يوم":"منتهي"} · ${new Date(x.expires_at).toLocaleDateString("ar")}</span></div>
-  <div><button onclick="extT('${x.id}',7)">+7 أيام</button> <button onclick="extT('${x.id}',30)">+30</button> <button onclick="stopT('${x.id}')">إيقاف</button></div></div>`}).join("")||'<p class="mut">لا توجد متدربات بعد</p>'}</div>`;
+  return `<div class="row"><div><b>${esc(x.username)}</b><br><span class="mut">${d>0?"متبقي "+d+" يوم":"منتهي"} · ${new Date(x.expires_at).toLocaleDateString("ar")}</span></div>
+  <div class="ctl"><input id="d_${x.id}" type="number" min="0" value="${Math.max(d,0)}"><button onclick="setD('${x.id}')">حفظ الأيام</button><button onclick="stopT('${x.id}')">إيقاف</button></div></div>`}).join("")||'<p class="mut">لا توجد متدربات بعد</p>'}</div>`;
 }
 async function loadT(){
   const {data}=await sb.from("trainees").select("*").order("created_at",{ascending:false});
@@ -206,12 +348,14 @@ async function addT(){
   const {error:e2}=await sb.from("trainees").insert({id:data.user.id,username:u,expires_at:new Date(Date.now()+d*864e5).toISOString()});
   sb2.auth.signOut().catch(()=>{});
   if(e2){$("tb").disabled=false;return alert(e2.message)}
-  S.cred=`الموقع: ${location.href.split("?")[0]}\nاسم المستخدم: ${u}\nكلمة المرور: ${p}\nصالح لمدة ${d} يوم`;
+  S.cred=`الموقع: ${location.href.split("?")[0]}\nاسم المستخدم: ${u}\nكلمة المرور: ${p}\nمدة الاشتراك: ${d} يوم`;
   loadT();
 }
-async function extT(id,d){
-  const t=S.list.find(x=>x.id===id),base=Math.max(Date.now(),new Date(t.expires_at).getTime());
-  await sb.from("trainees").update({expires_at:new Date(base+d*864e5).toISOString()}).eq("id",id);loadT();
+async function setD(id){
+  const n=parseInt($("d_"+id).value);
+  if(!(n>=0))return alert("اكتبي عدد أيام صحيحاً");
+  const {error}=await sb.from("trainees").update({expires_at:new Date(Date.now()+n*864e5).toISOString()}).eq("id",id);
+  if(error)return alert(error.message);loadT();
 }
 async function stopT(id){
   if(!confirm("إيقاف هذا الحساب الآن؟"))return;
