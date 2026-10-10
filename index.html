@@ -66,6 +66,9 @@ details{font-size:14px;color:#dde}summary{cursor:pointer;color:var(--b);font-wei
 .row{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:10px 0}
 .ctl{display:flex;gap:6px;align-items:center}.ctl input{width:80px;margin:0}
 .ctl button{padding:10px 12px;border-radius:8px;border:0;background:#ffffff26;color:#fff}
+.wk{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.wk .btn{margin:0}
+.day.today{border-color:var(--a)}
+.wa{background:#25d366;color:#fff;border-radius:8px;padding:10px 12px;text-decoration:none;font-size:14px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -219,11 +222,11 @@ async function enter(u){
 async function out(){await sb.auth.signOut();S.coach=false;S.tab="ex";loginView()}
 
 /* ===== الواجهة ===== */
-function setTab(k){S.tab=k;k==="co"?loadT():k==="ms"?loadM():render()}
+function setTab(k){S.tab=k;k==="co"?loadT():k==="ms"?loadM():k==="sc"?loadS():render()}
 function render(){
   const T=[["ex","🏋️ التمارين"],["cal","🔥 السعرات"],["nu","🥗 التغذية"],["ms",S.coach?"📏 القياسات":"📏 قياساتي"]];
-  if(S.coach)T.push(["co","👩‍🤝‍👩 المتدربات"]);
-  const V={ex:exView,cal:calView,nu:nuView,ms:mView,co:coView}[S.tab]();
+  if(S.coach)T.push(["sc","📅 الجدول"],["co","👩‍🤝‍👩 المتدربات"]);
+  const V={ex:exView,cal:calView,nu:nuView,ms:mView,sc:scView,co:coView}[S.tab]();
   $("app").innerHTML=`<header>${LOGO}<div class="hb">${S.coach?'<span class="pill">المدرّبة</span>':`<span class="pill">⏳ متبقي ${S.days} يوم</span>`}<button class="btn alt" style="margin:0" onclick="out()">خروج</button></div></header>
   <nav>${T.map(t=>`<button class="tab ${S.tab===t[0]?"on":""}" onclick="setTab('${t[0]}')">${t[1]}</button>`).join("")}</nav><main>${V}</main>`;
 }
@@ -328,24 +331,27 @@ function coView(){
   return `<h2>إنشاء حساب متدربة</h2><div class="card">
   <label>اسم المستخدم (أحرف إنجليزية وأرقام)</label><input id="tu" dir="ltr" autocapitalize="none">
   <label>كلمة المرور</label><input id="tp" dir="ltr" value="${pw()}">
+  <label>اسم المتدربة (اختياري، يظهر في رسائل التذكير)</label><input id="tn">
+  <label>رقم الجوال مع رمز الدولة (اختياري)</label><input id="tg" dir="ltr" inputmode="tel" placeholder="9655XXXXXXX">
   <label>مدة الاشتراك (بالأيام)</label><input id="td" type="number" min="1" value="30">
   <button class="btn" id="tb" onclick="addT()">إنشاء الحساب</button>
   ${S.cred?`<div class="cred">${esc(S.cred)}</div><button class="btn alt" onclick="navigator.clipboard.writeText(S.cred);this.textContent='تم النسخ'">نسخ البيانات</button>`:""}</div>
   <h2>المتدربات</h2><div class="card">${S.list.some(x=>new Date(x.expires_at)<Date.now())?'<button class="btn alt" onclick="delExp()">🗑 حذف جميع الحسابات المنتهية</button>':''}${S.list.map(x=>{const d=Math.ceil((new Date(x.expires_at)-Date.now())/864e5);
-  return `<div class="row"><div><b>${esc(x.username)}</b><br><span class="mut">${d>0?"متبقي "+d+" يوم":"منتهي"} · ${new Date(x.expires_at).toLocaleDateString("ar")}</span></div>
-  <div class="ctl"><input id="d_${x.id}" type="number" min="0" value="${Math.max(d,0)}"><button onclick="setD('${x.id}')">حفظ الأيام</button><button onclick="stopT('${x.id}')">إيقاف</button><button onclick="delT('${x.id}')">🗑 حذف</button></div></div>`}).join("")||'<p class="mut">لا توجد متدربات بعد</p>'}</div>`;
+  return `<div class="row"><div><b>${esc(x.full_name||x.username)}</b> <span class="mut">(${esc(x.username)})</span><br><span class="mut">${x.phone?"📞 "+esc(x.phone)+" · ":""}${d>0?"متبقي "+d+" يوم":"منتهي"} · ${new Date(x.expires_at).toLocaleDateString("ar")}</span></div>
+  <div class="ctl"><input id="d_${x.id}" type="number" min="0" value="${Math.max(d,0)}"><button onclick="setD('${x.id}')">حفظ الأيام</button><button onclick="setP('${x.id}')">📞</button><button onclick="stopT('${x.id}')">إيقاف</button><button onclick="delT('${x.id}')">🗑 حذف</button></div></div>`}).join("")||'<p class="mut">لا توجد متدربات بعد</p>'}</div>`;
 }
 async function loadT(){
   const {data}=await sb.from("trainees").select("*").order("created_at",{ascending:false});
   S.list=data||[];render();
 }
 async function addT(){
-  const u=$("tu").value.trim().toLowerCase().replace(/[^a-z0-9._-]/g,""),p=$("tp").value,d=parseInt($("td").value);
+  const u=$("tu").value.trim().toLowerCase().replace(/[^a-z0-9._-]/g,""),p=$("tp").value,d=parseInt($("td").value),ph=normP($("tg").value);
   if(u.length<3||p.length<6||!(d>0))return alert("تأكدي من اسم المستخدم (3 أحرف فأكثر) وكلمة المرور (6 فأكثر) وعدد الأيام");
+  if($("tg").value.trim()&&!ph)return alert("رقم الجوال غير صحيح، اكتبيه مع رمز الدولة بدون + أو أصفار، مثال: 9655XXXXXXX");
   $("tb").disabled=true;
   const {data,error}=await sb2.auth.signUp({email:"fit."+u+"@"+UD,password:p});
   if(error){$("tb").disabled=false;return alert(/already|registered/i.test(error.message)?"اسم المستخدم مستخدم، اختاري غيره":error.message)}
-  const {error:e2}=await sb.from("trainees").insert({id:data.user.id,username:u,expires_at:new Date(Date.now()+d*864e5).toISOString()});
+  const {error:e2}=await sb.from("trainees").insert({id:data.user.id,username:u,expires_at:new Date(Date.now()+d*864e5).toISOString(),full_name:$("tn").value.trim()||null,phone:ph||null});
   sb2.auth.signOut().catch(()=>{});
   if(e2){$("tb").disabled=false;return alert(e2.message)}
   S.cred=`الموقع: ${location.href.split("?")[0]}\nاسم المستخدم: ${u}\nكلمة المرور: ${p}\nمدة الاشتراك: ${d} يوم`;
@@ -361,6 +367,7 @@ async function stopT(id){
   if(!confirm("إيقاف هذا الحساب الآن؟"))return;
   await sb.from("trainees").update({expires_at:new Date().toISOString()}).eq("id",id);loadT();
 }
+
 async function delT(id){
   const t=S.list.find(x=>x.id===id);
   if(!confirm("حذف حساب "+t.username+" نهائياً مع كل قياساتها؟ لا يمكن التراجع."))return;
@@ -374,6 +381,71 @@ async function delExp(){
   const {error}=await sb.rpc("delete_expired_trainees");
   if(error)return alert(error.message);
   S.sel="";loadT();
+}
+
+/* ===== الجدول الأسبوعي (للمدرّبة فقط) ===== */
+const ymd=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const wkOf=d=>{const x=new Date(d);x.setHours(0,0,0,0);x.setDate(x.getDate()-(x.getDay()+1)%7);return x};   // بداية الأسبوع: السبت
+const mn=t=>{const [h,m]=t.split(":").map(Number);return h*60+m};
+const tm=t=>{const [h,m]=t.split(":").map(Number);return (h%12||12)+":"+String(m).padStart(2,"0")+" "+(h<12?"صباحاً":"مساءً")};
+const e1=t=>{const [h,m]=t.split(":").map(Number);return String((h+1)%24).padStart(2,"0")+":"+String(m).padStart(2,"0")};
+const dl=d=>d.toLocaleDateString("ar-u-nu-latn",{weekday:"long",day:"numeric",month:"long"});
+const normP=v=>{const d=String(v).replace(/\D/g,"").replace(/^00/,"");return d.length>=10&&!d.startsWith("0")?d:""};
+async function loadS(){
+  if(!S.wk)S.wk=wkOf(new Date());
+  if(!S.list.length){const {data}=await sb.from("trainees").select("*").order("created_at",{ascending:false});S.list=data||[]}
+  const z=new Date(S.wk);z.setDate(z.getDate()+6);
+  const {data}=await sb.from("sessions").select("*").gte("d",ymd(S.wk)).lte("d",ymd(z)).order("d").order("t");
+  S.ss=data||[];render();
+}
+function shiftW(n){const x=new Date(S.wk);x.setDate(x.getDate()+7*n);S.wk=x;loadS()}
+function wa(t,s){
+  const a=s.t.slice(0,5);
+  const m=`السلام عليكم${t.full_name?" "+t.full_name:""} 🌸
+نذكّرك بموعد جلستك التدريبية مع fit by tethkar:
+📅 ${dl(new Date(s.d+"T00:00:00"))}
+⏰ من ${tm(a)} إلى ${tm(e1(a))}
+مدة الجلسة ساعة واحدة، ونرجو الحضور قبل الموعد بخمس دقائق مع ملابس رياضية مريحة وزجاجة ماء 💧
+وإن طرأ أي ظرف فأخبرينا مسبقاً لنرتّب لكِ موعداً بديلاً.
+بالتوفيق، ونراكِ قريباً 💪`;
+  return "https://wa.me/"+t.phone+"?text="+encodeURIComponent(m);
+}
+function apptRow(s){
+  const t=S.list.find(x=>x.id===s.trainee_id)||{},a=s.t.slice(0,5);
+  return `<div class="row"><div><b>${tm(a)} – ${tm(e1(a))}</b><br><span class="mut">${esc(t.full_name||t.username||"—")}</span></div>
+  <div class="ctl">${t.phone?`<a class="wa" target="_blank" rel="noopener" href="${wa(t,s)}">📲 واتساب</a>`:`<button onclick="setP('${t.id}')">📞 أضيفي الرقم</button>`}<button onclick="delS('${s.id}')">✕</button></div></div>`;
+}
+function scView(){
+  const days=[...Array(7)].map((_,i)=>{const x=new Date(S.wk);x.setDate(x.getDate()+i);return x}),td=ymd(new Date());
+  const dv=days.some(x=>ymd(x)===td)?td:ymd(days[0]);
+  if(!S.list.length)return `<h2>Weekly Schedule</h2><div class="card"><p class="mut">أضيفي متدربة أولاً من تبويب «المتدربات».</p></div>`;
+  return `<h2>Weekly Schedule</h2>
+  <div class="card"><div class="wk"><button class="btn alt" onclick="shiftW(-1)">▶ الأسبوع السابق</button><button class="btn alt" onclick="S.wk=wkOf(new Date());loadS()">هذا الأسبوع</button><button class="btn alt" onclick="shiftW(1)">الأسبوع التالي ◀</button></div></div>
+  <div class="card"><h3>إضافة موعد</h3>
+  <label>المتدربة</label><select id="sc_t">${S.list.map(x=>`<option value="${x.id}">${esc(x.full_name||x.username)}</option>`).join("")}</select>
+  <label>التاريخ</label><input id="sc_d" type="date" value="${dv}">
+  <label>وقت البداية (مدة الجلسة ساعة واحدة)</label><input id="sc_h" type="time" step="900" value="17:00">
+  <button class="btn" onclick="addS()">إضافة الموعد</button></div>
+  ${days.map(d=>{const k=ymd(d),L=S.ss.filter(s=>s.d===k);return `<div class="card day ${k===td?"today":""}"><h3>${dl(d)}${k===td?" · اليوم":""}</h3>${L.map(apptRow).join("")||'<p class="mut">لا توجد مواعيد</p>'}</div>`}).join("")}`;
+}
+async function addS(){
+  const id=$("sc_t").value,d=$("sc_d").value,t=$("sc_h").value;
+  if(!id||!d||!t)return alert("اختاري المتدربة والتاريخ والوقت");
+  const {data:ex}=await sb.from("sessions").select("t").eq("d",d);
+  if((ex||[]).some(x=>Math.abs(mn(x.t)-mn(t))<60))return alert("يوجد موعد آخر يتعارض مع هذا الوقت (مدة الجلسة ساعة واحدة)");
+  const {error}=await sb.from("sessions").insert({trainee_id:id,d,t});
+  if(error)return alert(error.message);
+  S.wk=wkOf(new Date(d+"T00:00:00"));loadS();
+}
+async function delS(id){if(!confirm("حذف هذا الموعد؟"))return;await sb.from("sessions").delete().eq("id",id);loadS()}
+async function setP(id){
+  const t=S.list.find(x=>x.id===id);
+  const n=prompt("اسم المتدربة (يظهر في رسالة التذكير):",t.full_name||"");if(n===null)return;
+  const p=prompt("رقم الجوال مع رمز الدولة بدون + أو أصفار، مثال: 9655XXXXXXX",t.phone||"");if(p===null)return;
+  const ph=normP(p);if(p.trim()&&!ph)return alert("الرقم غير صحيح، اكتبيه مع رمز الدولة بدون + أو أصفار");
+  const {error}=await sb.from("trainees").update({full_name:n.trim()||null,phone:ph||null}).eq("id",id);
+  if(error)return alert(error.message);
+  t.full_name=n.trim()||null;t.phone=ph||null;render();
 }
 
 init();
