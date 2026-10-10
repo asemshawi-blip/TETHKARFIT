@@ -331,9 +331,9 @@ function coView(){
   <label>مدة الاشتراك (بالأيام)</label><input id="td" type="number" min="1" value="30">
   <button class="btn" id="tb" onclick="addT()">إنشاء الحساب</button>
   ${S.cred?`<div class="cred">${esc(S.cred)}</div><button class="btn alt" onclick="navigator.clipboard.writeText(S.cred);this.textContent='تم النسخ'">نسخ البيانات</button>`:""}</div>
-  <h2>المتدربات</h2><div class="card">${S.list.map(x=>{const d=Math.ceil((new Date(x.expires_at)-Date.now())/864e5);
+  <h2>المتدربات</h2><div class="card">${S.list.some(x=>new Date(x.expires_at)<Date.now())?'<button class="btn alt" onclick="delExp()">🗑 حذف جميع الحسابات المنتهية</button>':''}${S.list.map(x=>{const d=Math.ceil((new Date(x.expires_at)-Date.now())/864e5);
   return `<div class="row"><div><b>${esc(x.username)}</b><br><span class="mut">${d>0?"متبقي "+d+" يوم":"منتهي"} · ${new Date(x.expires_at).toLocaleDateString("ar")}</span></div>
-  <div class="ctl"><input id="d_${x.id}" type="number" min="0" value="${Math.max(d,0)}"><button onclick="setD('${x.id}')">حفظ الأيام</button><button onclick="stopT('${x.id}')">إيقاف</button></div></div>`}).join("")||'<p class="mut">لا توجد متدربات بعد</p>'}</div>`;
+  <div class="ctl"><input id="d_${x.id}" type="number" min="0" value="${Math.max(d,0)}"><button onclick="setD('${x.id}')">حفظ الأيام</button><button onclick="stopT('${x.id}')">إيقاف</button><button onclick="delT('${x.id}')">🗑 حذف</button></div></div>`}).join("")||'<p class="mut">لا توجد متدربات بعد</p>'}</div>`;
 }
 async function loadT(){
   const {data}=await sb.from("trainees").select("*").order("created_at",{ascending:false});
@@ -360,6 +360,20 @@ async function setD(id){
 async function stopT(id){
   if(!confirm("إيقاف هذا الحساب الآن؟"))return;
   await sb.from("trainees").update({expires_at:new Date().toISOString()}).eq("id",id);loadT();
+}
+async function delT(id){
+  const t=S.list.find(x=>x.id===id);
+  if(!confirm("حذف حساب "+t.username+" نهائياً مع كل قياساتها؟ لا يمكن التراجع."))return;
+  const {error}=await sb.rpc("delete_trainee",{tid:id});
+  if(error)return alert(error.message);
+  S.sel="";loadT();
+}
+async function delExp(){
+  const n=S.list.filter(x=>new Date(x.expires_at)<Date.now()).length;
+  if(!n||!confirm("حذف "+n+" حساب منتهٍ نهائياً مع كل قياساتها؟ لا يمكن التراجع."))return;
+  const {error}=await sb.rpc("delete_expired_trainees");
+  if(error)return alert(error.message);
+  S.sel="";loadT();
 }
 
 init();
