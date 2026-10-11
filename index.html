@@ -33,7 +33,7 @@ nav{display:flex;gap:8px;overflow-x:auto;padding:0 18px 12px;position:sticky;top
 main{max-width:1000px;margin:auto;padding:12px 18px calc(60px + env(safe-area-inset-bottom))}
 .card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin:12px 0;backdrop-filter:blur(8px)}
 label{font-size:13px;color:var(--mut)}
-input,select{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#ffffff12;color:#fff;margin:4px 0 10px;font-family:inherit;font-size:16px}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#ffffff12;color:#fff;margin:4px 0 10px;font-family:inherit;font-size:16px}
 select option{color:#000}
 .mut{color:var(--mut);font-size:14px}
 .chips{display:flex;gap:8px;overflow-x:auto;margin:12px 0}
@@ -82,7 +82,7 @@ const sb=supabase.createClient(SBU,SBK);
 const sb2=supabase.createClient(SBU,SBK,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-let S={coach:false,me:"",days:0,goal:"",tab:"ex",day:0,mf:"all",list:[],cred:"",vid:{},sel:"",rows:[]};
+let S={coach:false,me:"",days:0,goal:"",tab:"ex",day:0,mf:"all",list:[],cred:"",vid:{},sel:"",rows:[],mi:{},pd:0,tp:{},ss:[]};
 const LOGO='<h1 class="logo"><b>fit</b> <i>by</i> <b>tethkar</b></h1>';
 
 /* ===== التمارين: [الاسم, المجموعات × التكرار, الراحة] ===== */
@@ -113,7 +113,9 @@ ch:["بذور الشيا",486,17,42,31],hn:["عسل",304,.3,82,0],ov:["زيتو�
 sy:["صلصة صويا قليلة الصوديوم",53,8,5,.1],bn:["موز",89,1.1,23,.3],ap:["تفاح",52,.3,14,.2],bw:["توت مشكّل",50,.7,12,.3],
 sw:["فراولة",32,.7,7.7,.3],mg:["مانجو",60,.8,15,.4],dt:["تمر",277,1.8,75,.2],mk:["حليب قليل الدسم",42,3.4,5,1],
 am:["حليب لوز غير محلّى",15,.6,.3,1.2],pr:["بروتين مصل اللبن (بودرة)",400,80,8,6],ca:["كاكاو غير محلّى",228,19.6,58,13.7],
-tp:["صلصة طماطم",32,1.6,7,.3],gr:["جرانولا",471,10,64,20],hu:["حمّص بالطحينة",166,8,14,10]};
+tp:["صلصة طماطم",32,1.6,7,.3],gr:["جرانولا",471,10,64,20],hu:["حمّص بالطحينة",166,8,14,10],
+tk:["صدر ديك رومي (نيء)",114,24,0,1.5],fb:["فول مدمس (مطبوخ)",110,7.6,19,.4],cs:["كاجو",553,18,30,44],ps:["بذور القرع",559,30,11,49],
+ki:["كيوي",61,1.1,15,.5],pn:["أناناس",50,.5,13,.1],co:["ذرة حلوة (مطبوخة)",96,3.4,21,1.5]};
 const PC={eg:[50,"بيضة"],bn:[120,"موزة"],ap:[180,"تفاحة"]};
 
 /* ===== الوجبات: الاسم | النوع | المكوّنات (رمز:جرام) | طريقة التحضير ===== */
@@ -128,9 +130,21 @@ A:"اخلطي {1} مع {2} وبقية المكوّنات في كوب أو وعا
 F:"اخفقي المكوّنات السائلة معاً ثم أضيفي الجافة وقلّبي حتى يتجانس الخليط. اسكبيه على مقلاة غير لاصقة بحرارة متوسطة، دقيقتان لكل وجه حتى يتحمّر، وزيّنيه بالفاكهة.",
 E:"اخفقي البيض مع الملح والفلفل. حمّري الخضار دقيقتين في مقلاة، ثم اسكبي البيض واطهيه على نار هادئة حتى يتماسك، وقدّميه مع بقية المكوّنات.",
 T:"حمّري البصل والثوم في قدر بقليل من الزيت، ثم أضيفي {1} والخضار والتوابل مع كوبين من الماء. اتركيها على نار هادئة 20–25 دقيقة حتى تنضج المكوّنات ويثخن القوام.",
-L:"قطّعي الخضار وضعيها في وعاء كبير، وأضيفي {1}. تبّلي بزيت الزيتون وعصير الليمون والملح والفلفل، وقلّبي جيداً قبل التقديم."};
-const EM={B:"🥗",O:"🍗",P:"🍳",W:"🌯",S:"🥤",A:"🍓",F:"🥞",E:"🍳",T:"🍲",L:"🥬"};
-const IM={B:"photo-1546069901-ba9599a7e63c",O:"photo-1467003909585-2f8a72700288",P:"photo-1512621776951-a57141f2eefd",W:"photo-1565299585323-38d6b0865b47",S:"photo-1553530666-ba11a7da3888",A:"photo-1488477181946-6428a0291777",F:"photo-1528207776546-365bb710ee93",E:"photo-1482049016688-2d3e1b311543",T:"photo-1547592180-85f173990554",L:"photo-1540189549336-e6e99c3679fe"};
+L:"قطّعي الخضار وضعيها في وعاء كبير، وأضيفي {1}. تبّلي بزيت الزيتون وعصير الليمون والملح والفلفل، وقلّبي جيداً قبل التقديم.",
+H:"اطهي {1} مع الحليب على نار هادئة 5–7 دقائق مع التحريك حتى يثخن القوام، ثم أضيفي بقية المكوّنات وقدّميه دافئاً."};
+const EM={B:"🥗",O:"🍗",P:"🍳",W:"🌯",S:"🥤",A:"🍓",F:"🥞",E:"🍳",T:"🍲",L:"🥬",H:"🥣"};
+const IM={
+B:["photo-1546069901-ba9599a7e63c","photo-1512058564366-18510be2db19","photo-1490645935967-10de6ba17061"],
+O:["photo-1467003909585-2f8a72700288","photo-1519708227418-c8fd9a32b7a2","photo-1555939594-58d7cb561ad1"],
+P:["photo-1512621776951-a57141f2eefd","photo-1473093295043-cdd812d0e601","photo-1543339308-43e59d6b73a6"],
+W:["photo-1565299585323-38d6b0865b47","photo-1551782450-a2132b4ba21d","photo-1476224203421-9ac39bcb3327"],
+S:["photo-1553530666-ba11a7da3888","photo-1498837167922-ddd27525d352"],
+A:["photo-1488477181946-6428a0291777","photo-1511690743698-d9d85f2fbf38","photo-1490645935967-10de6ba17061"],
+F:["photo-1528207776546-365bb710ee93","photo-1484723091739-30a097e8f929"],
+E:["photo-1482049016688-2d3e1b311543","photo-1504754524776-8f4f37790ca0"],
+T:["photo-1547592180-85f173990554","photo-1455619452474-d2be8b1e70cd"],
+L:["photo-1540189549336-e6e99c3679fe","photo-1512621776951-a57141f2eefd","photo-1559847844-5315695dadae"],
+H:["photo-1504754524776-8f4f37790ca0","photo-1493770348161-369560ae357d"]};
 const MD=`بان كيك الشوفان والموز|b|oa:50 bn:120 eg:100 mk:60 bw:60 hn:7|F
 شوفان ليلي بزبدة الفول السوداني والتوت|b|oa:45 mk:150 gy:80 ch:8 pb:10 bw:70|A
 أومليت السبانخ والفيتا مع خبز القمح|b|eg:150 sn:60 fe:30 tm:50 ol:5 wb:40|E
@@ -180,7 +194,57 @@ const MD=`بان كيك الشوفان والموز|b|oa:50 bn:120 eg:100 mk:60 
 شيك الشوكولاتة وزبدة الفول السوداني|p|mk:250 bn:60 pr:30 pb:16 ca:5|S
 سموذي التوت والبروتين|p|am:250 pr:30 bw:100 bn:60 oa:20|S
 وعاء الأرز والتونة السريع|p|tu:100 br:150 cu:60 lj:10 ol:3|B
-بان كيك البروتين بالموز|p|oa:30 pr:25 bn:100 eg:50 mk:50|F`;
+بان كيك البروتين بالموز|p|oa:30 pr:25 bn:100 eg:50 mk:50|F
+فطائر الكوسا والبيض بالزبادي|b|zu:150 eg:100 oa:20 gy:40 ol:4 wb:50|P
+بيض مقلي بالسبانخ على خبز القمح|b|eg:100 sn:80 wb:60 ol:5 tm:60|E
+شوفان دافئ بالتفاح والقرفة|b|oa:50 mk:200 ap:120 wn:12 hn:5|H
+شوفان بالكاكاو وزبدة الفول السوداني|b|oa:50 mk:200 ca:6 pb:12 bn:60|H
+فول مدمس بالطماطم والبيض|b|fb:150 eg:100 tm:80 ol:6 wb:50 lj:10|P
+ساندويش الديك الرومي والأفوكادو|b|wb:70 tk:80 av:40 tm:50 lt:20|W
+وعاء الزبادي والتوت واللوز|b|gy:200 bw:100 al:15 hn:7 gr:20|A
+بان كيك الموز والبروتين|b|oa:40 pr:20 bn:100 eg:50 mk:60 bw:50|F
+تورتيلا البيض والخضار|b|tr:60 eg:100 bp:60 sn:30 mz:20 ol:3|W
+سموذي الأخضر بالأناناس والبروتين|b|gy:100 pn:120 sn:40 pr:20 am:150 ch:5 oa:30|S
+كباب الدجاج مع الأرز والسلطة|l|ck:160 br:140 on:30 tm:80 cu:80 ol:6 gy:30|O
+صينية الدجاج والبطاطس بالفرن|l|ck:160 po:200 zu:100 bp:60 ol:8 gl:5|O
+كبسة اللحم الخفيفة بالخضار|l|bf:140 br:150 on:50 tm:80 cr:50 ol:6 gl:5|P
+سلطة الديك الرومي بالأفوكادو والكينوا|l|tk:150 qn:120 av:50 tm:80 lt:50 lj:20 ol:5|L
+معكرونة القمح الكامل بالدجاج والسبانخ|l|pa:180 ck:130 sn:80 tm:80 ol:8 gl:5 mz:20|P
+برجر الدجاج المشوي بخبز القمح|l|ck:150 wb:70 lt:30 tm:60 av:30 gy:30|W
+سمك مشوي بالأعشاب مع الكينوا والخضار|l|fw:180 qn:130 zu:100 bp:60 ol:8 lj:20|O
+حمّص بالدجاج والخضار|l|cp:150 ck:130 tm:100 cu:80 ov:20 ol:6 lj:15|L
+مجدّرة العدس مع الزبادي والبيض|l|le:180 br:120 on:80 gy:60 ol:8 tm:60 eg:50|T
+أرز بالروبيان والخضار|l|sh:150 br:140 bp:80 gb:60 on:30 ol:6 gl:5 lj:10|P
+ستيك اللحم مع البطاطا الحلوة والهليون|l|st:140 sp:200 as:100 ol:5 lj:10|O
+بول التونة والذرة والأفوكادو|l|tu:120 co:100 av:50 tm:80 cu:60 lj:20 br:100|B
+شوربة الخضار بالدجاج والبرغل|l|ck:140 bu:100 cr:80 zu:80 on:50 tm:80 ol:6 gl:5|T
+سلمون بصلصة الزبادي والشبت مع البطاطس|d|sa:140 po:180 gy:40 gb:100 ol:4 lj:15|O
+دجاج تكا بالزبادي مع الأرز|d|ck:160 gy:60 br:120 on:40 tm:80 ol:6 gl:5|O
+كفتة اللحم بالطماطم مع الكوسا|d|bf:150 tm:150 zu:150 on:50 ol:6 gl:5 br:100|P
+دجاج مشوي مع السلطة اليونانية والبطاطس|d|ck:160 po:150 cu:80 tm:80 fe:30 ov:15 ol:5 lj:10|O
+فاهيتا الروبيان بالفلفل|d|sh:160 bp:150 on:70 tr:70 av:40 ol:5 lj:10|W
+أومليت الخضار مع خبز القمح والجبن|d|eg:150 bp:60 mu:60 sn:40 mz:25 ol:4 wb:50|E
+سمك مشوي بالزعتر مع الخضار المشوية|d|fw:180 zu:120 bp:100 cr:60 po:120 ol:8 lj:15|O
+لازانيا الكوسا باللحم|d|bf:130 zu:200 tp:120 mz:40 on:40 ol:5 gl:5|O
+صدور الدجاج المحشية بالسبانخ والفيتا|d|ck:170 sn:80 fe:30 gl:5 ol:5 sp:150 bc:80|O
+ستير فراي الديك الرومي بالخضار|d|tk:160 br:110 bc:100 cr:60 bp:60 sy:15 gl:5 ol:6|P
+سلطة التونة والبيض المسلوق|d|tu:130 eg:100 lt:80 tm:80 cu:60 ol:8 lj:20 wb:40|L
+برياني الدجاج الخفيف|d|ck:150 br:150 on:60 tm:80 gy:40 ol:6 gl:5|P
+شوربة الطماطم بالعدس مع التوست والجبن|d|tp:200 mz:30 wb:60 ol:5 on:50 gl:5 le:100|T
+موز بزبدة الفول السوداني|s|bn:120 pb:15|A
+جبنة قريش بالأناناس والشيا|s|cc:150 pn:100 ch:5|A
+زبادي يوناني بالكاجو والتمر|s|gy:170 cs:15 dt:15|A
+حمّص مع أصابع الجزر والخيار|s|hu:70 cr:100 cu:80|L
+تفاح مع جبنة قريش والجوز|s|ap:150 cc:100 wn:8|A
+توست الأفوكادو الخفيف|s|wb:40 av:50 tm:50 lj:5|W
+مزيج الطاقة بالمكسرات والتمر|s|al:15 wn:10 dt:20 ps:8|A
+سموذي الكيوي والزبادي|s|gy:150 ki:150 mk:80 ch:5|S
+شيك الموز والتمر والبروتين|p|mk:250 bn:80 pr:30 dt:15 ca:3|S
+زبادي البروتين بالفراولة والشوفان|p|gy:250 sw:100 oa:30 pr:15 hn:7|A
+ساندويش الديك الرومي بعد التمرين|p|wb:80 tk:100 lt:20 tm:50 mz:20|W
+أرز بالدجاج السريع|p|ck:120 br:150 bc:60 ol:3 lj:10|B
+شيك المانجو والبروتين|p|am:250 mg:150 pr:30 oa:20|S
+فطيرة البيض والجبن بعد التمرين|p|eg:100 ew:100 wb:60 mz:20 sn:30|E`;
 const nm=k=>FD[k][0],sh=k=>nm(k).replace(/\s*\(.*\)/,"");
 const MEALS=MD.split("\n").map(l=>{
   const [n,t,i,m]=l.split("|"),it=i.split(" ").map(x=>{const [k,g]=x.split(":");return [k,+g]});
@@ -217,6 +281,8 @@ async function enter(u){
   }
   const {data:v}=await sb.from("ex_videos").select("*");
   (v||[]).forEach(x=>S.vid[x.name]=x.url);
+  const {data:mi}=await sb.from("meal_imgs").select("*");
+  (mi||[]).forEach(x=>S.mi[x.name]=x.url);
   render();
 }
 async function out(){await sb.auth.signOut();S.coach=false;S.tab="ex";loginView()}
@@ -256,7 +322,8 @@ function calView(){
   <label>مستوى النشاط</label><select id="cf"><option value="1.2">قليل الحركة (بدون تمارين)</option><option value="1.375" selected>نشاط خفيف (1–3 أيام أسبوعياً)</option><option value="1.55">نشاط متوسط (3–5 أيام)</option><option value="1.725">نشاط مرتفع (6–7 أيام)</option></select>
   <label>الهدف</label><select id="cg"><option value="lose">خسارة الوزن</option><option value="maintain">ثبات الوزن</option><option value="gain">زيادة الوزن وبناء العضلات</option></select>
   <button class="btn" style="width:100%" onclick="calc()">احسبي احتياجك</button></div>
-  <div class="card" id="res"><p class="mut">أدخلي بياناتك ثم اضغطي «احسبي احتياجك».</p></div>`;
+  <div class="card" id="res"><p class="mut">أدخلي بياناتك ثم اضغطي «احسبي احتياجك».</p></div>
+  <div id="plan"></div>`;
 }
 function calc(){
   const a=+$("ca").value,w=+$("cw").value,h=+$("ch").value,f=+$("cf").value,g=$("cg").value;
@@ -268,19 +335,53 @@ function calc(){
   <p class="mut" style="text-align:center">احتياجك اليومي من السعرات لتحقيق هدفك${t===1200?" (تم ضبطه على الحد الأدنى الآمن)":""}</p>
   <div class="g3"><div><b>${r(bmr)}</b><span>معدل الحرق الأساسي (BMR)</span></div><div><b>${r(tdee)}</b><span>إجمالي الحرق اليومي (TDEE)</span></div>
   <div><b>${Math.round(pr)}g</b><span>بروتين</span></div><div><b>${Math.round(carb)}g</b><span>كربوهيدرات</span></div><div><b>${Math.round(fat)}g</b><span>دهون</span></div></div>`;
+  S.tg={t:Math.round(t),g,off:0};S.pd=0;showPlan();
 }
-function mealCard(m){
+/* ===== الجداول الغذائية المقترحة حسب الهدف ===== */
+const SLOTS=[["b","🌅 فطور",.25],["l","☀️ غداء",.30],["d","🌙 عشاء",.25],["s","🍎 سناك",.20]];
+function pool(t,g){
+  let L=MEALS.filter(m=>t==="s"?(m.t==="s"||m.t==="p"):m.t===t);
+  if(g==="lose")L=[...L].sort((a,b)=>b.p/b.k-a.p/a.k).slice(0,Math.max(6,Math.ceil(L.length*.7)));
+  if(g==="gain")L=[...L].sort((a,b)=>b.k-a.k);
+  return L;
+}
+function mkPlan(t,g,off){
+  return [...Array(7)].map((_,i)=>SLOTS.map(([s,lb,sh])=>{
+    const L=pool(s,g),m=L[(i*3+off)%L.length];
+    return {m,lb,f:Math.min(1.8,Math.max(.6,t*sh/m.k))};
+  }));
+}
+function showPlan(){
+  const {t,g,off}=S.tg,days=mkPlan(t,g,off),d=days[S.pd];
+  const tot=d.reduce((a,x)=>[a[0]+x.m.k*x.f,a[1]+x.m.p*x.f,a[2]+x.m.c*x.f,a[3]+x.m.f*x.f],[0,0,0,0]).map(v=>Math.round(v));
+  $("plan").innerHTML=`<h2>خطتك الغذائية المقترحة</h2>
+  <div class="chips">${days.map((_,i)=>`<button class="chip ${i===S.pd?"on":""}" onclick="S.pd=${i};showPlan()">اليوم ${i+1}</button>`).join("")}<button class="chip" onclick="S.tg.off++;showPlan()">🔄 خطة أخرى</button></div>
+  <div class="card"><div class="g3"><div><b>${tot[0]}</b><span>سعرة من هدف ${t}</span></div><div><b>${tot[1]}g</b><span>بروتين</span></div><div><b>${tot[2]}g</b><span>كربوهيدرات</span></div><div><b>${tot[3]}g</b><span>دهون</span></div></div></div>
+  <div class="meals">${d.map(x=>mealCard(x.m,x.f,x.lb)).join("")}</div>`;
+}
+function mealCard(m,f=1,lb=""){
   const s=ST[m.m].replace("{1}",sh(m.it[0][0])).replace("{2}",m.it[1]?sh(m.it[1][0]):"");
-  return `<div class="meal"><div class="mi"><span>${EM[m.m]}</span><img src="https://images.unsplash.com/${IM[m.m]}?auto=format&fit=crop&w=800&q=70" loading="lazy" alt="" onerror="this.remove()"></div>
-  <div class="mb"><div class="tags"><span>${TY[m.t]}</span></div><h3>${m.n}</h3>
-  <div class="tags"><span>🔥 ${m.k} kcal</span><span>P ${m.p}g</span><span>C ${m.c}g</span><span>F ${m.f}g</span></div>
-  <ul>${m.it.map(([k,g])=>`<li>${nm(k)} — ${g} جم${PC[k]?` (${Math.round(g/PC[k][0]*2)/2} ${PC[k][1]})`:""}</li>`).join("")}</ul>
+  const q=x=>Math.round(x*f),gr=g=>f===1?g:g>=10?Math.round(g*f/5)*5:Math.round(g*f);
+  const a=IM[m.m],h=[...m.n].reduce((x,c)=>x+c.charCodeAt(0),0),src=S.mi[m.n]||"https://images.unsplash.com/"+a[h%a.length]+"?auto=format&fit=crop&w=800&q=70";
+  return `<div class="meal"><div class="mi"><span>${EM[m.m]}</span><img src="${esc(src)}" loading="lazy" alt="" onerror="this.remove()"></div>
+  <div class="mb"><div class="tags"><span>${lb||TY[m.t]}</span>${S.coach&&f===1?`<button class="ev" onclick="editI(${MEALS.indexOf(m)})">🖼</button>`:""}</div><h3>${m.n}</h3>
+  <div class="tags"><span>🔥 ${q(m.k)} kcal</span><span>P ${q(m.p)}g</span><span>C ${q(m.c)}g</span><span>F ${q(m.f)}g</span></div>
+  <ul>${m.it.map(([k,g])=>`<li>${nm(k)} — ${gr(g)} جم${PC[k]?` (${Math.round(gr(g)/PC[k][0]*2)/2} ${PC[k][1]})`:""}</li>`).join("")}</ul>
   <details><summary>طريقة التحضير</summary><p>${s}</p></details></div></div>`;
+}
+async function editI(i){
+  const m=MEALS[i],u=prompt("الصقي رابط صورة الوجبة: "+m.n+"\n(رابط مباشر يبدأ بـ https، واتركيه فارغاً لحذف الصورة المخصصة)",S.mi[m.n]||"");
+  if(u===null)return;
+  const v=u.trim();
+  if(v&&!/^https:\/\//i.test(v))return alert("الرابط غير صحيح، يجب أن يبدأ بـ https");
+  const {error}=v?await sb.from("meal_imgs").upsert({name:m.n,url:v}):await sb.from("meal_imgs").delete().eq("name",m.n);
+  if(error)return alert(error.message);
+  v?S.mi[m.n]=v:delete S.mi[m.n];render();
 }
 function nuView(){
   const L=MEALS.filter(m=>S.mf==="all"||m.t===S.mf);
   return `<h2>Healthy Meals</h2><div class="chips">${[["all","الكل"],...Object.entries(TY)].map(([k,v])=>`<button class="chip ${S.mf===k?"on":""}" onclick="S.mf='${k}';render()">${v}</button>`).join("")}</div>
-  <div class="meals">${L.map(mealCard).join("")}</div>`;
+  <div class="meals">${L.map(m=>mealCard(m)).join("")}</div>`;
 }
 
 /* ===== القياسات ===== */
@@ -396,19 +497,34 @@ async function loadS(){
   if(!S.list.length){const {data}=await sb.from("trainees").select("*").order("created_at",{ascending:false});S.list=data||[]}
   const z=new Date(S.wk);z.setDate(z.getDate()+6);
   const {data}=await sb.from("sessions").select("*").gte("d",ymd(S.wk)).lte("d",ymd(z)).order("d").order("t");
-  S.ss=data||[];render();
+  S.ss=data||[];
+  const {data:st}=await sb.from("app_settings").select("*");S.tp={};
+  (st||[]).forEach(x=>{if(x.k==="tpl_one")S.tp.one=x.v;if(x.k==="tpl_week")S.tp.wk=x.v});
+  render();
 }
 function shiftW(n){const x=new Date(S.wk);x.setDate(x.getDate()+7*n);S.wk=x;loadS()}
-function wa(t,s){
-  const a=s.t.slice(0,5);
-  const m=`السلام عليكم${t.full_name?" "+t.full_name:""} 🌸
+const DEF1=`السلام عليكم {الاسم} 🌸
 نذكّرك بموعد جلستك التدريبية مع fit by tethkar:
-📅 ${dl(new Date(s.d+"T00:00:00"))}
-⏰ من ${tm(a)} إلى ${tm(e1(a))}
+📅 {اليوم}
+⏰ من {من} إلى {إلى}
 مدة الجلسة ساعة واحدة، ونرجو الحضور قبل الموعد بخمس دقائق مع ملابس رياضية مريحة وزجاجة ماء 💧
 وإن طرأ أي ظرف فأخبرينا مسبقاً لنرتّب لكِ موعداً بديلاً.
 بالتوفيق، ونراكِ قريباً 💪`;
-  return "https://wa.me/"+t.phone+"?text="+encodeURIComponent(m);
+const DEFW=`السلام عليكم {الاسم} 🌸
+هذا جدول جلساتك التدريبية هذا الأسبوع مع fit by tethkar:
+{المواعيد}
+مدة كل جلسة ساعة واحدة، ونرجو الحضور قبل الموعد بخمس دقائق مع ملابس رياضية مريحة وزجاجة ماء 💧
+وإن طرأ أي ظرف فأخبرينا مسبقاً لنرتّب لكِ موعداً بديلاً.
+بالتوفيق، ونراكِ قريباً 💪`;
+const fill=(t,o)=>Object.entries(o).reduce((s,[k,v])=>s.split("{"+k+"}").join(v),t).replace(/[ \t]{2,}/g," ");
+const wlink=(ph,m)=>"https://wa.me/"+ph+"?text="+encodeURIComponent(m);
+function wa(t,s){
+  const a=s.t.slice(0,5);
+  return wlink(t.phone,fill(S.tp.one||DEF1,{"الاسم":t.full_name||"","اليوم":dl(new Date(s.d+"T00:00:00")),"من":tm(a),"إلى":tm(e1(a))}));
+}
+function waWeek(t,l){
+  const ls=l.map(s=>{const a=s.t.slice(0,5);return "📅 "+dl(new Date(s.d+"T00:00:00"))+" — ⏰ "+tm(a)+" إلى "+tm(e1(a))}).join("\n");
+  return wlink(t.phone,fill(S.tp.wk||DEFW,{"الاسم":t.full_name||"","المواعيد":ls}));
 }
 function apptRow(s){
   const t=S.list.find(x=>x.id===s.trainee_id)||{},a=s.t.slice(0,5);
@@ -419,6 +535,8 @@ function scView(){
   const days=[...Array(7)].map((_,i)=>{const x=new Date(S.wk);x.setDate(x.getDate()+i);return x}),td=ymd(new Date());
   const dv=days.some(x=>ymd(x)===td)?td:ymd(days[0]);
   if(!S.list.length)return `<h2>Weekly Schedule</h2><div class="card"><p class="mut">أضيفي متدربة أولاً من تبويب «المتدربات».</p></div>`;
+  const by={};S.ss.forEach(s=>(by[s.trainee_id]=by[s.trainee_id]||[]).push(s));
+  const wkc=Object.entries(by).filter(([,l])=>l.length>1).map(([id,l])=>{const t=S.list.find(x=>x.id===id)||{};return `<div class="row"><div><b>${esc(t.full_name||t.username||"—")}</b><br><span class="mut">${l.length} مواعيد هذا الأسبوع</span></div><div class="ctl">${t.phone?`<a class="wa" target="_blank" rel="noopener" href="${waWeek(t,l)}">📲 إرسال الكل برسالة واحدة</a>`:`<button onclick="setP('${t.id}')">📞 أضيفي الرقم</button>`}</div></div>`}).join("");
   return `<h2>Weekly Schedule</h2>
   <div class="card"><div class="wk"><button class="btn alt" onclick="shiftW(-1)">▶ الأسبوع السابق</button><button class="btn alt" onclick="S.wk=wkOf(new Date());loadS()">هذا الأسبوع</button><button class="btn alt" onclick="shiftW(1)">الأسبوع التالي ◀</button></div></div>
   <div class="card"><h3>إضافة موعد</h3>
@@ -426,7 +544,25 @@ function scView(){
   <label>التاريخ</label><input id="sc_d" type="date" value="${dv}">
   <label>وقت البداية (مدة الجلسة ساعة واحدة)</label><input id="sc_h" type="time" step="900" value="17:00">
   <button class="btn" onclick="addS()">إضافة الموعد</button></div>
+  ${wkc?`<div class="card"><h3>📨 إرسال جدول الأسبوع كاملاً</h3>${wkc}</div>`:""}
+  <details class="card"><summary>✏️ تعديل نصوص الرسائل</summary>
+  <p class="mut">الكلمات بين الأقواس تتبدّل تلقائياً: {الاسم} {اليوم} {من} {إلى}، وفي رسالة الأسبوع: {المواعيد}</p>
+  <label>رسالة الموعد الواحد</label><textarea id="tp1" rows="8">${esc(S.tp.one||DEF1)}</textarea>
+  <label>رسالة جميع مواعيد الأسبوع</label><textarea id="tp2" rows="8">${esc(S.tp.wk||DEFW)}</textarea>
+  <button class="btn" onclick="saveTpl()">حفظ النصوص</button> <button class="btn alt" onclick="resetTpl()">استعادة الافتراضي</button></details>
   ${days.map(d=>{const k=ymd(d),L=S.ss.filter(s=>s.d===k);return `<div class="card day ${k===td?"today":""}"><h3>${dl(d)}${k===td?" · اليوم":""}</h3>${L.map(apptRow).join("")||'<p class="mut">لا توجد مواعيد</p>'}</div>`}).join("")}`;
+}
+async function saveTpl(){
+  const a=$("tp1").value.trim(),b=$("tp2").value.trim();
+  if(!a||!b)return alert("لا يمكن ترك نص الرسالة فارغاً");
+  const {error}=await sb.from("app_settings").upsert([{k:"tpl_one",v:a},{k:"tpl_week",v:b}]);
+  if(error)return alert(error.message);
+  S.tp={one:a,wk:b};alert("تم حفظ نصوص الرسائل ✅");render();
+}
+async function resetTpl(){
+  if(!confirm("استعادة النصوص الافتراضية؟"))return;
+  await sb.from("app_settings").delete().in("k",["tpl_one","tpl_week"]);
+  S.tp={};render();
 }
 async function addS(){
   const id=$("sc_t").value,d=$("sc_d").value,t=$("sc_h").value;
