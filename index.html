@@ -82,7 +82,7 @@ const sb=supabase.createClient(SBU,SBK);
 const sb2=supabase.createClient(SBU,SBK,{auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false}});
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-let S={coach:false,me:"",days:0,goal:"",tab:"ex",day:0,mf:"all",list:[],cred:"",vid:{},sel:"",rows:[],mi:{},pd:0,tp:{},ss:[]};
+let S={coach:false,me:"",days:0,goal:"",tab:"ex",day:0,mf:"all",list:[],cred:"",vid:{},sel:"",rows:[],mi:{},pd:0,tp:{},ss:[],tf:"all"};
 const LOGO='<h1 class="logo"><b>fit</b> <i>by</i> <b>tethkar</b></h1>';
 
 /* ===== التمارين: [الاسم, المجموعات × التكرار, الراحة] ===== */
@@ -252,6 +252,51 @@ const MEALS=MD.split("\n").map(l=>{
   return {n,t,m,it,k:Math.round(v[0]),p:Math.round(v[1]),c:Math.round(v[2]),f:Math.round(v[3])};
 });
 
+/* ===== فلة الويكند: الاسم | الفئة | سعرات/100جم | بروتين | كربوهيدرات | دهون | الوحدة | وزن الوحدة بالجرام ===== */
+const TCAT={c:["🍿","رقائق وفشار"],k:["🍫","شوكولاتة"],b:["🍪","بسكويت وكيك"],g:["🍬","حلوى سكرية"],a:["🥮","حلويات عربية"],i:["🍦","مثلجات"]};
+const TDATA=`ليز كلاسيك|c|540|6.5|52|33|حصة|28
+برنقلز الأصلية|c|530|4.5|52|34|حصة|28
+دوريتوس بنكهة الجبنة|c|500|7|60|25|حصة|28
+شيتوس مقرمش|c|555|6|54|35|حصة|28
+فشار مملح جاهز|c|500|9|56|28|حصة|28
+فشار بالكراميل|c|425|3|76|12|حصة|28
+كيندر بوينو|k|570|8.6|49|37|قطعة (قضيبان)|43
+كيندر شوكولاتة|k|563|8.7|53|35.7|قطعة|12.5
+كيندر جوي|k|540|8|54|32|بيضة|20
+كيندر ديليس|k|440|5.5|53|22|حبة|39
+سنيكرز|k|490|8.5|59|24.5|لوح|50
+مارس|k|450|4|70|17|لوح|51
+تويكس|k|495|4.5|65|24|لوح (قطعتان)|50
+كيت كات (4 أصابع)|k|500|6|60|26|لوح|41.5
+باونتي|k|480|4|58|25|لوح (قطعتان)|57
+إم آند إمز شوكولاتة|k|502|4.8|68|23.4|كيس صغير|45
+شوكولاتة بالحليب (مثل ديري ميلك)|k|535|7.7|59|29.7|4 مربعات|25
+ريسيز بزبدة الفول السوداني|k|505|8.5|57|28|قطعتان|42
+فيريرو روشيه|k|590|8|43|42|حبة|12.5
+مالتيزرز|k|495|7.5|62|24|كيس|37
+نوتيلا|k|539|6.3|57.5|30.9|ملعقة كبيرة|15
+أوريو|b|480|4.5|70|21|3 قطع|34
+لوتس بسكوف|b|485|5|73|19|قطعتان|15.6
+كوكيز برقائق الشوكولاتة|b|488|5|65|23|حبة كبيرة|45
+براوني الشوكولاتة|b|465|5|55|25|قطعة|60
+دونات مزجّج|b|450|5|51|25|حبة|60
+هاريبو دببة الجيلي|g|343|6.9|77|0.5|حصة|30
+حلوى الكراميل|g|396|1.6|86|5|3 قطع|30
+بقلاوة|a|430|6|45|26|قطعة|40
+كنافة بالجبن|a|330|8|38|17|حصة|150
+لقيمات بالدبس|a|350|4|55|13|5 حبات|80
+معمول بالتمر|a|400|4|60|16|قطعة|40
+كليجا|a|425|6|62|17|قطعة|35
+أم علي|a|300|6|30|17|حصة|200
+بسبوسة|a|370|5|52|16|قطعة|70
+حلاوة طحينية|a|520|12|50|30|قطعة|30
+ماجنوم كلاسيك|i|300|3.3|29|19|حبة|79
+آيس كريم فانيلا|i|207|3.5|24|11|كرة|66`;
+const TREATS=TDATA.split("\n").map(l=>{
+  const [n,c,k,p,cb,f,u,g]=l.split("|"),w=+g/100;
+  return {n,c,k100:+k,u,g:+g,k:Math.round(k*w),p:Math.round(p*w),cb:Math.round(cb*w),f:Math.round(f*w)};
+});
+
 /* ===== الدخول وصلاحية الأيام ===== */
 async function init(){const {data}=await sb.auth.getSession();data.session?enter(data.session.user):loginView()}
 function loginView(m=""){
@@ -321,6 +366,7 @@ function calView(){
   <label>الطول (سم)</label><input id="ch" type="number" inputmode="decimal">
   <label>مستوى النشاط</label><select id="cf"><option value="1.2">قليل الحركة (بدون تمارين)</option><option value="1.375" selected>نشاط خفيف (1–3 أيام أسبوعياً)</option><option value="1.55">نشاط متوسط (3–5 أيام)</option><option value="1.725">نشاط مرتفع (6–7 أيام)</option></select>
   <label>الهدف</label><select id="cg"><option value="lose">خسارة الوزن</option><option value="maintain">ثبات الوزن</option><option value="gain">زيادة الوزن وبناء العضلات</option></select>
+  <label>فلة الويكند في الجدول الغذائي</label><select id="cw2"><option value="no">بدون فلة الويكند</option><option value="yes">أضيفي فلة الويكند (يومان في الأسبوع)</option></select>
   <button class="btn" style="width:100%" onclick="calc()">احسبي احتياجك</button></div>
   <div class="card" id="res"><p class="mut">أدخلي بياناتك ثم اضغطي «احسبي احتياجك».</p></div>
   <div id="plan"></div>`;
@@ -335,7 +381,7 @@ function calc(){
   <p class="mut" style="text-align:center">احتياجك اليومي من السعرات لتحقيق هدفك${t===1200?" (تم ضبطه على الحد الأدنى الآمن)":""}</p>
   <div class="g3"><div><b>${r(bmr)}</b><span>معدل الحرق الأساسي (BMR)</span></div><div><b>${r(tdee)}</b><span>إجمالي الحرق اليومي (TDEE)</span></div>
   <div><b>${Math.round(pr)}g</b><span>بروتين</span></div><div><b>${Math.round(carb)}g</b><span>كربوهيدرات</span></div><div><b>${Math.round(fat)}g</b><span>دهون</span></div></div>`;
-  S.tg={t:Math.round(t),g,off:0};S.pd=0;showPlan();
+  S.tg={t:Math.round(t),g,off:0,wk:$("cw2").value==="yes"};S.pd=0;showPlan();
 }
 /* ===== الجداول الغذائية المقترحة حسب الهدف ===== */
 const SLOTS=[["b","🌅 فطور",.25],["l","☀️ غداء",.30],["d","🌙 عشاء",.25],["s","🍎 سناك",.20]];
@@ -345,19 +391,29 @@ function pool(t,g){
   if(g==="gain")L=[...L].sort((a,b)=>b.k-a.k);
   return L;
 }
-function mkPlan(t,g,off){
-  return [...Array(7)].map((_,i)=>SLOTS.map(([s,lb,sh])=>{
-    const L=pool(s,g),m=L[(i*3+off)%L.length];
-    return {m,lb,f:Math.min(1.8,Math.max(.6,t*sh/m.k))};
-  }));
+function pickT(i,off,t){const L=TREATS.filter(x=>x.k<=t*.22);return L.length?L[(i*5+off*3)%L.length]:null}
+function mkPlan(t,g,off,wk){
+  return [...Array(7)].map((_,i)=>{
+    const tr=wk&&i>=5?pickT(i,off,t):null,b=t-(tr?tr.k:0);
+    const d=SLOTS.map(([s,lb,sh])=>{const L=pool(s,g),m=L[(i*3+off)%L.length];return {m,lb,f:Math.min(1.8,Math.max(.6,b*sh/m.k))}});
+    if(tr)d.push({tr,lb:"🍫 فلة الويكند"});
+    return d;
+  });
 }
 function showPlan(){
-  const {t,g,off}=S.tg,days=mkPlan(t,g,off),d=days[S.pd];
-  const tot=d.reduce((a,x)=>[a[0]+x.m.k*x.f,a[1]+x.m.p*x.f,a[2]+x.m.c*x.f,a[3]+x.m.f*x.f],[0,0,0,0]).map(v=>Math.round(v));
+  const {t,g,off,wk}=S.tg,days=mkPlan(t,g,off,wk),d=days[S.pd];
+  const tot=d.reduce((a,x)=>{const o=x.tr?[x.tr.k,x.tr.p,x.tr.cb,x.tr.f]:[x.m.k*x.f,x.m.p*x.f,x.m.c*x.f,x.m.f*x.f];return a.map((v,j)=>v+o[j])},[0,0,0,0]).map(v=>Math.round(v));
   $("plan").innerHTML=`<h2>خطتك الغذائية المقترحة</h2>
-  <div class="chips">${days.map((_,i)=>`<button class="chip ${i===S.pd?"on":""}" onclick="S.pd=${i};showPlan()">اليوم ${i+1}</button>`).join("")}<button class="chip" onclick="S.tg.off++;showPlan()">🔄 خطة أخرى</button></div>
+  <div class="chips">${days.map((_,i)=>`<button class="chip ${i===S.pd?"on":""}" onclick="S.pd=${i};showPlan()">اليوم ${i+1}${wk&&i>=5?" 🍫":""}</button>`).join("")}<button class="chip" onclick="S.tg.off++;showPlan()">🔄 خطة أخرى</button><button class="chip ${wk?"on":""}" onclick="S.tg.wk=!S.tg.wk;showPlan()">🍫 فلة الويكند ${wk?"✓":""}</button></div>
   <div class="card"><div class="g3"><div><b>${tot[0]}</b><span>سعرة من هدف ${t}</span></div><div><b>${tot[1]}g</b><span>بروتين</span></div><div><b>${tot[2]}g</b><span>كربوهيدرات</span></div><div><b>${tot[3]}g</b><span>دهون</span></div></div></div>
-  <div class="meals">${d.map(x=>mealCard(x.m,x.f,x.lb)).join("")}</div>`;
+  <div class="meals">${d.map(x=>x.tr?treatCard(x.tr,x.lb):mealCard(x.m,x.f,x.lb)).join("")}</div>`;
+}
+function treatCard(t,lb=""){
+  const i=TREATS.indexOf(t),src=S.mi[t.n];
+  return `<div class="meal"><div class="mi"><span>${TCAT[t.c][0]}</span>${src?`<img src="${esc(src)}" loading="lazy" alt="" onerror="this.remove()">`:""}</div>
+  <div class="mb"><div class="tags"><span>${lb||TCAT[t.c][1]}</span>${S.coach&&!lb?`<button class="ev" onclick="editI(${i},'t')">🖼</button>`:""}</div><h3>${t.n}</h3>
+  <div class="tags"><span>🔥 ${t.k} kcal</span><span>P ${t.p}g</span><span>C ${t.cb}g</span><span>F ${t.f}g</span></div>
+  <p class="mut">${t.u} (${t.g} جم) · لكل 100 جم: ${t.k100} kcal</p></div></div>`;
 }
 function mealCard(m,f=1,lb=""){
   const s=ST[m.m].replace("{1}",sh(m.it[0][0])).replace("{2}",m.it[1]?sh(m.it[1][0]):"");
@@ -369,8 +425,8 @@ function mealCard(m,f=1,lb=""){
   <ul>${m.it.map(([k,g])=>`<li>${nm(k)} — ${gr(g)} جم${PC[k]?` (${Math.round(gr(g)/PC[k][0]*2)/2} ${PC[k][1]})`:""}</li>`).join("")}</ul>
   <details><summary>طريقة التحضير</summary><p>${s}</p></details></div></div>`;
 }
-async function editI(i){
-  const m=MEALS[i],u=prompt("الصقي رابط صورة الوجبة: "+m.n+"\n(رابط مباشر يبدأ بـ https، واتركيه فارغاً لحذف الصورة المخصصة)",S.mi[m.n]||"");
+async function editI(i,kind){
+  const m=kind==="t"?TREATS[i]:MEALS[i],u=prompt("الصقي رابط صورة: "+m.n+"\n(رابط مباشر يبدأ بـ https، واتركيه فارغاً لحذف الصورة المخصصة)",S.mi[m.n]||"");
   if(u===null)return;
   const v=u.trim();
   if(v&&!/^https:\/\//i.test(v))return alert("الرابط غير صحيح، يجب أن يبدأ بـ https");
@@ -379,9 +435,15 @@ async function editI(i){
   v?S.mi[m.n]=v:delete S.mi[m.n];render();
 }
 function nuView(){
-  const L=MEALS.filter(m=>S.mf==="all"||m.t===S.mf);
-  return `<h2>Healthy Meals</h2><div class="chips">${[["all","الكل"],...Object.entries(TY)].map(([k,v])=>`<button class="chip ${S.mf===k?"on":""}" onclick="S.mf='${k}';render()">${v}</button>`).join("")}</div>
+  const w=S.mf==="w",L=MEALS.filter(m=>S.mf==="all"||m.t===S.mf);
+  const ch=[["all","الكل"],...Object.entries(TY),["w","🍫 فلة الويكند"]].map(([k,v])=>`<button class="chip ${S.mf===k?"on":""}" onclick="S.mf='${k}';render()">${v}</button>`).join("");
+  if(!w)return `<h2>Healthy Meals</h2><div class="chips">${ch}</div>
   <div class="meals">${L.map(m=>mealCard(m)).join("")}</div>`;
+  const T=TREATS.filter(t=>S.tf==="all"||t.c===S.tf);
+  return `<h2>Weekend Treats</h2><div class="chips">${ch}</div>
+  <div class="chips">${[["all","الكل"],...Object.entries(TCAT).map(([k,v])=>[k,v[0]+" "+v[1]])].map(([k,v])=>`<button class="chip ${S.tf===k?"on":""}" onclick="S.tf='${k}';render()">${v}</button>`).join("")}</div>
+  <p class="mut">القيم تقريبية وتختلف حسب البلد وحجم العبوة، فراجعي الملصق الغذائي على المنتج.</p>
+  <div class="meals">${T.map(t=>treatCard(t)).join("")}</div>`;
 }
 
 /* ===== القياسات ===== */
